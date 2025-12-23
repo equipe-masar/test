@@ -12,11 +12,7 @@ const userSystem = new UserSystem();
 // Middleware
 app.use(cors());
 app.use(express.json());
-// Only serve specific public files instead of the entire directory
-app.use(express.static('.', {
-  index: false, // Don't serve index files automatically
-  dotfiles: 'deny' // Don't serve dotfiles
-}));
+// Don't use static file serving - serve specific files only via explicit routes
 
 // Logging middleware for dashboard access
 const logDashboardAccess = (req, res, next) => {
