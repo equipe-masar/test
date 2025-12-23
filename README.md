@@ -25,7 +25,37 @@ SimpleShop/
 └── README.md             # This file
 ```
 
-## 🚀 Quick Start (< 30 minutes)
+## 📖 Documentation
+
+- **[Installation Guide](INSTALLATION.md)** - Complete setup instructions (< 30 minutes)
+- **[Quick Reference](QUICK_REFERENCE.md)** - Common commands and useful information
+- **[Database Documentation](database/README.md)** - Database schema and scripts
+- **[.NET Backend](backend-dotnet/README.md)** - .NET Web API documentation
+- **[Express.js Backend](backend-express/README.md)** - Express.js API documentation
+
+## 🚀 Quick Start
+
+### Automated Setup (Recommended)
+
+**Linux/macOS:**
+```bash
+git clone <repository-url>
+cd test
+./setup.sh
+```
+
+**Windows:**
+```powershell
+git clone <repository-url>
+cd test
+.\setup.bat
+```
+
+The setup script will install and configure everything automatically.
+
+### Manual Setup
+
+See the [Installation Guide](INSTALLATION.md) for detailed manual setup instructions.
 
 ### Prerequisites
 
@@ -34,70 +64,17 @@ SimpleShop/
 - Node.js 18+ and npm
 - Git
 
-### Step 1: Clone the Repository
+### Verify Installation
 
 ```bash
-git clone <repository-url>
-cd test
+# Test environment setup
+./test-environment.sh
+
+# Or manually test each component
+curl http://localhost:5000/api/health/db  # .NET Backend
+curl http://localhost:3000/api/health/db  # Express.js Backend
 ```
 
-### Step 2: Start SQL Server
-
-```bash
-docker-compose up -d
-```
-
-Wait for SQL Server to be ready (check with `docker-compose logs -f sqlserver`).
-
-### Step 3: Setup Database
-
-```bash
-# Copy scripts into container
-docker cp ./database/scripts/01-create-database.sql simpleshop-sqlserver:/tmp/
-docker cp ./database/scripts/02-create-user.sql simpleshop-sqlserver:/tmp/
-docker cp ./database/scripts/03-create-tables.sql simpleshop-sqlserver:/tmp/
-docker cp ./database/scripts/04-seed-data.sql simpleshop-sqlserver:/tmp/
-
-# Execute scripts
-docker exec -it simpleshop-sqlserver /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P YourStrong@Passw0rd -i /tmp/01-create-database.sql
-docker exec -it simpleshop-sqlserver /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P YourStrong@Passw0rd -i /tmp/02-create-user.sql
-docker exec -it simpleshop-sqlserver /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P YourStrong@Passw0rd -i /tmp/03-create-tables.sql
-docker exec -it simpleshop-sqlserver /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P YourStrong@Passw0rd -i /tmp/04-seed-data.sql
-```
-
-### Step 4: Start .NET Backend
-
-```bash
-cd backend-dotnet
-dotnet restore
-dotnet build
-dotnet run
-```
-
-The .NET API will be available at `http://localhost:5000`
-
-Test it:
-```bash
-curl http://localhost:5000/api/health/db
-```
-
-### Step 5: Start Express.js Backend
-
-In a new terminal:
-
-```bash
-cd backend-express
-cp .env.example .env
-npm install
-npm start
-```
-
-The Express.js API will be available at `http://localhost:3000`
-
-Test it:
-```bash
-curl http://localhost:3000/api/health/db
-```
 
 ## ✅ Verification Checklist
 
@@ -110,11 +87,8 @@ After setup, verify everything works:
 - [ ] Express API responds: `curl http://localhost:3000/api/health`
 - [ ] Express DB connection: `curl http://localhost:3000/api/health/db`
 
-## 📚 Documentation
+Or simply run: `./test-environment.sh`
 
-- [Database Setup](database/README.md)
-- [.NET Backend](backend-dotnet/README.md)
-- [Express.js Backend](backend-express/README.md)
 
 ## 🔧 Configuration
 
