@@ -12,12 +12,46 @@ const userSystem = new UserSystem();
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use(express.static('.'));
+// Only serve specific public files instead of the entire directory
+app.use(express.static('.', {
+  index: false, // Don't serve index files automatically
+  dotfiles: 'deny' // Don't serve dotfiles
+}));
 
 // Logging middleware for dashboard access
 const logDashboardAccess = (req, res, next) => {
   const timestamp = new Date().toISOString();
   console.log(`[${timestamp}] Dashboard access attempt by user: ${req.headers['x-user-id'] || 'unknown'}`);
+  next();
+};
+
+// Simple rate limiter for file serving
+const rateLimitMap = new Map();
+const RATE_LIMIT_WINDOW = 60000; // 1 minute
+const RATE_LIMIT_MAX_REQUESTS = 10; // Max 10 requests per window
+
+const rateLimiter = (req, res, next) => {
+  const ip = req.ip || req.connection.remoteAddress;
+  const now = Date.now();
+  
+  if (!rateLimitMap.has(ip)) {
+    rateLimitMap.set(ip, { count: 1, resetTime: now + RATE_LIMIT_WINDOW });
+    return next();
+  }
+  
+  const record = rateLimitMap.get(ip);
+  
+  if (now > record.resetTime) {
+    record.count = 1;
+    record.resetTime = now + RATE_LIMIT_WINDOW;
+    return next();
+  }
+  
+  if (record.count >= RATE_LIMIT_MAX_REQUESTS) {
+    return res.status(429).json({ error: 'Too many requests, please try again later' });
+  }
+  
+  record.count++;
   next();
 };
 
@@ -221,8 +255,8 @@ app.get('/api/admin/recent-changes', requireAdmin, (req, res) => {
   }
 });
 
-// Serve the admin dashboard page
-app.get('/admin/dashboard', (req, res) => {
+// Serve the admin dashboard page with rate limiting
+app.get('/admin/dashboard', rateLimiter, (req, res) => {
   res.sendFile(path.join(__dirname, 'admin-dashboard.html'));
 });
 

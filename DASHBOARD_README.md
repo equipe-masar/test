@@ -1,5 +1,7 @@
 # Admin Dashboard - User Management System
 
+> **⚠️ SECURITY NOTICE**: This is a demo implementation with simplified authentication for demonstration purposes. For production use, implement proper JWT-based authentication, secure password hashing, session management, and HTTPS. See "Future Enhancements" section for details.
+
 This is an admin dashboard for supervising users, roles, and system status.
 
 ## Features
@@ -187,13 +189,22 @@ The system initializes with 6 sample users:
 
 ## Future Enhancements
 
+### Security (Production-Ready)
+- Replace header-based auth with JWT-based authentication
+- Implement proper password hashing (bcrypt/argon2)
+- Add session management
+- Implement HTTPS/TLS
+- Add rate limiting
+- Add CSRF protection
+
+### Features
 - Database integration (PostgreSQL/MongoDB)
-- JWT-based authentication
 - Real-time updates with WebSockets
 - Export reports (PDF/Excel)
 - Advanced filtering and search
 - User management CRUD operations
 - Role-based access control (RBAC) refinement
+- Email notifications for alerts
 
 ## Contributing
 
