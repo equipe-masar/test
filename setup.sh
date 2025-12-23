@@ -26,12 +26,18 @@ if ! command -v docker &> /dev/null; then
 fi
 echo -e "${GREEN}✓ Docker is installed${NC}"
 
-# Check Docker Compose
-if ! command -v docker-compose &> /dev/null; then
+# Check Docker Compose (both old and new formats)
+DOCKER_COMPOSE_CMD=""
+if docker compose version &> /dev/null; then
+    DOCKER_COMPOSE_CMD="docker compose"
+    echo -e "${GREEN}✓ Docker Compose (plugin) is installed${NC}"
+elif command -v docker-compose &> /dev/null; then
+    DOCKER_COMPOSE_CMD="docker-compose"
+    echo -e "${GREEN}✓ Docker Compose (standalone) is installed${NC}"
+else
     echo -e "${RED}❌ Docker Compose is not installed. Please install Docker Compose first.${NC}"
     exit 1
 fi
-echo -e "${GREEN}✓ Docker Compose is installed${NC}"
 
 # Check .NET
 if ! command -v dotnet &> /dev/null; then
@@ -58,7 +64,7 @@ echo ""
 
 # Step 1: Start SQL Server
 echo -e "${BLUE}Step 1: Starting SQL Server with Docker Compose...${NC}"
-docker-compose up -d
+$DOCKER_COMPOSE_CMD up -d
 echo -e "${GREEN}✓ SQL Server container started${NC}"
 echo ""
 

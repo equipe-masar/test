@@ -153,21 +153,31 @@ See [database/README.md](database/README.md) for detailed schema.
 ## 🐳 Docker Commands
 
 ```bash
-# Start SQL Server
+# Start SQL Server (use 'docker compose' or 'docker-compose' depending on your version)
+docker compose up -d
+# or
 docker-compose up -d
 
 # Stop SQL Server
+docker compose down
+# or
 docker-compose down
 
 # View logs
+docker compose logs -f sqlserver
+# or
 docker-compose logs -f sqlserver
 
 # Access SQL Server shell
 docker exec -it simpleshop-sqlserver /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P YourStrong@Passw0rd
 
 # Remove containers and volumes
+docker compose down -v
+# or
 docker-compose down -v
 ```
+
+> **Note**: Modern Docker installations use `docker compose` (with space), while older installations use `docker-compose` (with hyphen). Use the command that works with your Docker version.
 
 ## 🛠️ Troubleshooting
 

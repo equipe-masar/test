@@ -5,14 +5,14 @@
 ### Docker / SQL Server
 
 ```bash
-# Start SQL Server
-docker-compose up -d
+# Start SQL Server (use 'docker compose' or 'docker-compose')
+docker compose up -d
 
 # Stop SQL Server
-docker-compose down
+docker compose down
 
 # View logs
-docker-compose logs -f sqlserver
+docker compose logs -f sqlserver
 
 # Access SQL shell
 docker exec -it simpleshop-sqlserver /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P YourStrong@Passw0rd
@@ -21,11 +21,13 @@ docker exec -it simpleshop-sqlserver /opt/mssql-tools/bin/sqlcmd -S localhost -U
 docker ps | grep sqlserver
 
 # Restart SQL Server
-docker-compose restart sqlserver
+docker compose restart sqlserver
 
 # Remove all (including data)
-docker-compose down -v
+docker compose down -v
 ```
+
+> **Note**: Use `docker-compose` (with hyphen) if you have an older Docker installation.
 
 ### .NET Backend
 
@@ -236,10 +238,10 @@ EXEC sp_spaceused;
 docker info
 
 # Check logs
-docker-compose logs sqlserver
+docker compose logs sqlserver
 
 # Restart
-docker-compose restart sqlserver
+docker compose restart sqlserver
 ```
 
 ### Cannot connect to SQL Server
