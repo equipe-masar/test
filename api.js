@@ -171,7 +171,7 @@ const apiRoutes = {
 	// GET /admin/users - List all users
 	listUsers: (req, res) => {
 		const users = userSystem.listUsers().map(user => {
-			const { mot_de_passe, passwordHash, ...userWithoutPassword } = user;
+			const { mot_de_passe, ...userWithoutPassword } = user;
 			return userWithoutPassword;
 		});
 

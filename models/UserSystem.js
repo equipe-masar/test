@@ -24,7 +24,6 @@ class UserSystem {
 			unitId: '',
 			unit: null,
 			userType: '',
-			status: '',
 			username: '',
 			passwordHash: '',
 			lastPasswordChange: null,
@@ -59,11 +58,6 @@ class UserSystem {
 		const id = String(this._nextId++);
 		const defaults = this._defaultUserData();
 		const user = Object.assign({}, defaults, data, { id, createdAt: this._now(), updatedAt: this._now() });
-		
-		// Set default status to 'actif' if not provided
-		if (!user.statut) {
-			user.statut = 'actif';
-		}
 
 		this.users.set(id, user);
 		return user;
