@@ -10,8 +10,12 @@ const api_prefix = process.env.API_PREFIX;
 
 const sequelize = require("./app/config/db");
 
+
+// Models imports
 const { User } = require("./app/models/User.model");
 
+
+// Routes imports
 const userRouter = require("./app/routes/userRoute.routes");
 
 
@@ -22,15 +26,14 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(cookieParser()); // Use cookie-parser middleware for handling cookies
 
+
+
 // Routes
-
-
 app.use(`${api_prefix}/user`, userRouter);
 
-//
 
+// In-memory session store
 const { v4: uuidv4 } = require('uuid');
-
 const sessions = {}; 
 
 
@@ -48,13 +51,12 @@ app.use((req, res, next) => {
 
 
 
-//
+// // Sync Database and Start Server
 sequelize
   .sync({ 
     force: true, cascade: true 
 
-  })  // Add cascade
-  //.sync()
+  })  
   .then(() => {
     app.listen(port, () => {
       console.log(`Server is running on port ${port}`);
