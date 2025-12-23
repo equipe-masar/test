@@ -11,6 +11,12 @@ class UserSystem {
 	_defaultUserData() {
 		return {
 			id: null,
+			matricule: '',
+			mot_de_passe: '',
+			id_role: null,
+			statut: 'actif',
+			id_corps: null,
+			id_Categories_grade: null,
 			militaryId: '',
 			nationalId: '',
 			fullName: '',
@@ -18,7 +24,6 @@ class UserSystem {
 			unitId: '',
 			unit: null,
 			userType: '',
-			status: '',
 			username: '',
 			passwordHash: '',
 			lastPasswordChange: null,
@@ -31,11 +36,40 @@ class UserSystem {
 	}
 
 	createUser(data = {}) {
+		// Validate required fields
+		if (!data.matricule) {
+			throw new Error('Matricule is required');
+		}
+
+		// Check if matricule already exists
+		const existingUser = this.getUserByMatricule(data.matricule);
+		if (existingUser) {
+			throw new Error('Matricule already exists');
+		}
+
+		// Validate required fields for admin user creation
+		if (!data.mot_de_passe) {
+			throw new Error('Mot de passe is required');
+		}
+		if (!data.id_role) {
+			throw new Error('Role is required');
+		}
+
 		const id = String(this._nextId++);
 		const defaults = this._defaultUserData();
 		const user = Object.assign({}, defaults, data, { id, createdAt: this._now(), updatedAt: this._now() });
+
 		this.users.set(id, user);
 		return user;
+	}
+
+	getUserByMatricule(matricule) {
+		for (const user of this.users.values()) {
+			if (user.matricule === matricule) {
+				return user;
+			}
+		}
+		return null;
 	}
 
 	getUserById(id) {
