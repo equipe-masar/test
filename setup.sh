@@ -86,7 +86,7 @@ while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
 done
 
 if [ $RETRY_COUNT -eq $MAX_RETRIES ]; then
-    echo -e "${RED}❌ SQL Server failed to start. Check logs with: docker-compose logs sqlserver${NC}"
+    echo -e "${RED}❌ SQL Server failed to start. Check logs with: $DOCKER_COMPOSE_CMD logs sqlserver${NC}"
     exit 1
 fi
 echo ""

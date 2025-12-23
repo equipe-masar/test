@@ -15,6 +15,23 @@ if %ERRORLEVEL% NEQ 0 (
 )
 echo [OK] Docker is installed
 
+REM Check Docker Compose (both old and new formats)
+set DOCKER_COMPOSE_CMD=
+docker compose version >nul 2>nul
+if %ERRORLEVEL% EQU 0 (
+    set DOCKER_COMPOSE_CMD=docker compose
+    echo [OK] Docker Compose (plugin) is installed
+) else (
+    where docker-compose >nul 2>nul
+    if %ERRORLEVEL% EQU 0 (
+        set DOCKER_COMPOSE_CMD=docker-compose
+        echo [OK] Docker Compose (standalone) is installed
+    ) else (
+        echo [X] Docker Compose is not installed. Please install Docker Compose first.
+        exit /b 1
+    )
+)
+
 REM Check .NET
 where dotnet >nul 2>nul
 if %ERRORLEVEL% NEQ 0 (
@@ -43,7 +60,7 @@ echo.
 
 REM Step 1: Start SQL Server
 echo Step 1: Starting SQL Server with Docker Compose...
-docker-compose up -d
+%DOCKER_COMPOSE_CMD% up -d
 echo [OK] SQL Server container started
 echo.
 
