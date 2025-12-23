@@ -66,13 +66,12 @@ The dashboard will automatically load with admin credentials (for demo purposes)
 
 **API Endpoints:**
 
-To access the API directly, include these headers:
-- `x-user-id: ADM001` (or any admin user ID)
-- `x-user-role: admin`
+To access the API directly, include this header:
+- `x-user-id: 1` (Admin user ID - the system validates this user exists and has admin role)
 
 Example using curl:
 ```bash
-curl -H "x-user-id: ADM001" -H "x-user-role: admin" http://localhost:3000/api/admin/dashboard
+curl -H "x-user-id: 1" http://localhost:3000/api/admin/dashboard
 ```
 
 ### API Endpoints
@@ -127,24 +126,32 @@ curl -H "x-user-id: ADM001" -H "x-user-role: admin" http://localhost:3000/api/ad
 
 ### Access Control
 - All dashboard endpoints require admin role
+- User ID is validated against the UserSystem database
+- User role is verified from the database (not from headers)
 - Non-admin users receive 403 Forbidden error
-- Missing authentication returns 401 Unauthorized
+- Invalid user IDs receive 401 Unauthorized error
 - All access attempts are logged
 
 ### Testing Security
 
 **Admin Access (Should succeed):**
 ```bash
-curl -H "x-user-id: ADM001" -H "x-user-role: admin" http://localhost:3000/api/admin/dashboard
+curl -H "x-user-id: 1" http://localhost:3000/api/admin/dashboard
 ```
 
-**Non-Admin Access (Should fail):**
+**Non-Admin Access (Should fail with 403):**
 ```bash
-curl -H "x-user-id: USER001" -H "x-user-role: user" http://localhost:3000/api/admin/dashboard
+curl -H "x-user-id: 2" http://localhost:3000/api/admin/dashboard
 # Returns: {"error":"Forbidden - Admin access required"}
 ```
 
-**No Authentication (Should fail):**
+**Invalid User ID (Should fail with 401):**
+```bash
+curl -H "x-user-id: 999" http://localhost:3000/api/admin/dashboard
+# Returns: {"error":"Unauthorized - Invalid user ID"}
+```
+
+**No Authentication (Should fail with 401):**
 ```bash
 curl http://localhost:3000/api/admin/dashboard
 # Returns: {"error":"Unauthorized - No user ID provided"}
@@ -160,12 +167,12 @@ curl http://localhost:3000/api/admin/dashboard
 ## Sample Data
 
 The system initializes with 6 sample users:
-1. Ahmed Ben Ali - Colonel, Brigade Nord, user_brigade (active)
-2. Mohamed Trabelsi - Capitaine, Corps Sud, user_corps (active)
-3. Fatima Gharbi - Lieutenant, Brigade Nord, daf_validation (active)
-4. Karim Mansour - Sergent, Unité Est, operator (active)
-5. Salah Hamdi - Major, Corps Sud, user_brigade (inactive)
-6. Admin Principal - General, Commandement, admin (active)
+1. **Admin Principal** - General, Commandement, admin (active) - User ID: 1
+2. Ahmed Ben Ali - Colonel, Brigade Nord, user_brigade (active)
+3. Mohamed Trabelsi - Capitaine, Corps Sud, user_corps (active)
+4. Fatima Gharbi - Lieutenant, Brigade Nord, daf_validation (active)
+5. Karim Mansour - Sergent, Unité Est, operator (active)
+6. Salah Hamdi - Major, Corps Sud, user_brigade (inactive)
 
 ## Screenshot
 

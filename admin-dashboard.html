@@ -336,8 +336,9 @@
 
     <script>
         const API_BASE = window.location.origin;
-        const ADMIN_USER_ID = 'ADM001'; // For demo purposes
-        const ADMIN_ROLE = 'admin';
+        // NOTE: In production, these credentials should be obtained through proper authentication
+        // For demo purposes, we use hardcoded admin credentials
+        const ADMIN_USER_ID = '1'; // Admin user has ID "1" in the system
 
         async function loadDashboard() {
             const contentDiv = document.getElementById('content');
@@ -348,8 +349,7 @@
                 
                 const response = await fetch(`${API_BASE}/api/admin/dashboard`, {
                     headers: {
-                        'x-user-id': ADMIN_USER_ID,
-                        'x-user-role': ADMIN_ROLE
+                        'x-user-id': ADMIN_USER_ID
                     }
                 });
 

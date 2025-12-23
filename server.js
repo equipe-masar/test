@@ -23,20 +23,33 @@ const logDashboardAccess = (req, res, next) => {
 
 // Simple auth middleware - checks if user is admin
 const requireAdmin = (req, res, next) => {
-  const userRole = req.headers['x-user-role'];
   const userId = req.headers['x-user-id'];
   
   if (!userId) {
     return res.status(401).json({ error: 'Unauthorized - No user ID provided' });
   }
   
-  if (userRole !== 'admin') {
+  // Verify user exists in the system
+  const user = userSystem.getUserById(userId);
+  if (!user) {
+    console.log(`[${new Date().toISOString()}] Access denied for non-existent user: ${userId}`);
+    return res.status(401).json({ error: 'Unauthorized - Invalid user ID' });
+  }
+  
+  // Verify user has admin role
+  if (user.userType !== 'admin') {
     console.log(`[${new Date().toISOString()}] Access denied for non-admin user: ${userId}`);
     return res.status(403).json({ error: 'Forbidden - Admin access required' });
   }
   
   next();
 };
+
+// Constants
+const MILLISECONDS_PER_DAY = 1000 * 60 * 60 * 24;
+const DAYS_FOR_RECENT_ACTIVITY = 7;
+const MAX_RECENT_ACTIVITIES = 10;
+const MAX_ALERTS = 20;
 
 // Helper function to calculate statistics
 const calculateStatistics = (users) => {
@@ -48,7 +61,6 @@ const calculateStatistics = (users) => {
     statusDistribution: {},
     corpsDistribution: {},
     rankDistribution: {},
-    userTypeDistribution: {},
     recentActivities: [],
     alerts: []
   };
@@ -64,7 +76,6 @@ const calculateStatistics = (users) => {
     // Role/UserType distribution
     const userType = user.userType || 'unknown';
     stats.roleDistribution[userType] = (stats.roleDistribution[userType] || 0) + 1;
-    stats.userTypeDistribution[userType] = (stats.userTypeDistribution[userType] || 0) + 1;
 
     // Status distribution
     const status = user.status || 'unknown';
@@ -83,7 +94,7 @@ const calculateStatistics = (users) => {
 
     // Recent activities (created in last 7 days)
     const sevenDaysAgo = new Date();
-    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - DAYS_FOR_RECENT_ACTIVITY);
     if (user.createdAt && new Date(user.createdAt) > sevenDaysAgo) {
       stats.recentActivities.push({
         type: 'user_created',
@@ -95,7 +106,7 @@ const calculateStatistics = (users) => {
 
     // Alerts for recent status changes or new users
     if (user.updatedAt && new Date(user.updatedAt) > sevenDaysAgo) {
-      const daysSinceUpdate = Math.floor((Date.now() - new Date(user.updatedAt)) / (1000 * 60 * 60 * 24));
+      const daysSinceUpdate = Math.floor((Date.now() - new Date(user.updatedAt)) / MILLISECONDS_PER_DAY);
       if (daysSinceUpdate < 1) {
         stats.alerts.push({
           type: 'recent_change',
@@ -119,10 +130,10 @@ const calculateStatistics = (users) => {
 
   // Sort recent activities by timestamp (most recent first)
   stats.recentActivities.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-  stats.recentActivities = stats.recentActivities.slice(0, 10); // Keep only last 10
+  stats.recentActivities = stats.recentActivities.slice(0, MAX_RECENT_ACTIVITIES);
 
-  // Limit alerts to most recent 20
-  stats.alerts = stats.alerts.slice(0, 20);
+  // Limit alerts to most recent
+  stats.alerts = stats.alerts.slice(0, MAX_ALERTS);
 
   return stats;
 };
@@ -167,7 +178,7 @@ app.get('/api/admin/users', requireAdmin, (req, res) => {
     if (rank) {
       users = users.filter(u => u.rank === rank);
     }
-    if (corps && users.length > 0) {
+    if (corps) {
       users = users.filter(u => u.unit && u.unit.corps === corps);
     }
     
@@ -222,6 +233,20 @@ app.get('/health', (req, res) => {
 
 // Create some sample data for demonstration
 const initializeSampleData = () => {
+  // Create admin user first (will have ID "1")
+  userSystem.createUser({
+    militaryId: 'ADM001',
+    nationalId: 'NATADM001',
+    fullName: 'Admin Principal',
+    rank: 'General',
+    unitId: 'U000',
+    unit: { id: 'U000', name: 'Commandement', corps: 'Administration' },
+    userType: 'admin',
+    status: 'active',
+    username: 'admin',
+    passwordHash: 'admin_hash'
+  });
+
   // Sample users with different roles and statuses
   userSystem.createUser({
     militaryId: 'MIL001',
@@ -288,19 +313,6 @@ const initializeSampleData = () => {
     passwordHash: 'hash5'
   });
 
-  userSystem.createUser({
-    militaryId: 'ADM001',
-    nationalId: 'NATADM001',
-    fullName: 'Admin Principal',
-    rank: 'General',
-    unitId: 'U000',
-    unit: { id: 'U000', name: 'Commandement', corps: 'Administration' },
-    userType: 'admin',
-    status: 'active',
-    username: 'admin',
-    passwordHash: 'admin_hash'
-  });
-
   console.log('Sample data initialized with', userSystem.listUsers().length, 'users');
 };
 
@@ -312,9 +324,8 @@ app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
   console.log(`Admin Dashboard available at http://localhost:${PORT}/admin/dashboard`);
   console.log(`API endpoint: http://localhost:${PORT}/api/admin/dashboard`);
-  console.log('\nTo access the dashboard, include these headers:');
-  console.log('  x-user-id: ADM001');
-  console.log('  x-user-role: admin');
+  console.log('\nTo access the dashboard API, include this header:');
+  console.log('  x-user-id: 1  (Admin user ID)');
 });
 
 module.exports = app;
