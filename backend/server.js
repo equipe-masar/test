@@ -1,114 +1,72 @@
 const express = require("express");
-const app = express();
-var cors = require("cors");
+const cors = require("cors");
+const morgan = require("morgan");
+const cookieParser = require("cookie-parser");
 require("dotenv").config({ path: "./app/config/.env" });
-var morgan = require("morgan");
-const cookieParser = require('cookie-parser');
-
-const port = process.env.PORT;
-const api_prefix = process.env.API_PREFIX;
+require("./app/models/associations"); // set up associations
 
 const sequelize = require("./app/config/db");
-
-
-// Models imports
-const { User } = require("./app/models/User.model");
-
-
-// Routes imports
 const userRouter = require("./app/routes/userRoute.routes");
+const brigadeRouter = require("./app/routes/brigadeRoute.routes");
+const armeeRouter = require("./app/routes/armeeRoute.routes");
+const garnizonRouter = require("./app/routes/garnizonRoute.routes");
+const categorie_gradeRouter = require("./app/routes/categorie_gradeRoute.routes");
+const regionRouter = require("./app/routes/regionRoute.routes");
+const corgeRouter = require("./app/routes/corgeRoute.routes");
+const gradeRouter = require("./app/routes/gradeRoute.routes");
+const divisionRouter = require("./app/routes/divisionRoute.routes");
+const departementRouter = require("./app/routes/departementRoute.routes");
+const authMiddleware = require("./app/middleware/auth.middleware");
 
+const app = express();
+const port = process.env.PORT || 9000;
+const api_prefix = process.env.API_PREFIX || "/api";
 
-
-// MiddleWare
-app.use(cors());
+// --------------------
+// MIDDLEWARE
+// --------------------
+app.use(cors({
+  origin: true,           // allow Postman & browser
+  credentials: true
+}));
 app.use(morgan("dev"));
 app.use(express.json());
-app.use(cookieParser()); // Use cookie-parser middleware for handling cookies
+app.use(cookieParser());
 
-
-
-// Routes
+// --------------------
+// ROUTES
+// --------------------
 app.use(`${api_prefix}/user`, userRouter);
-
-
-// In-memory session store
-const { v4: uuidv4 } = require('uuid');
-const sessions = {}; 
-
-
-
-// Middleware to check if the request has a valid session
-app.use((req, res, next) => {
-  const sessionId = req.cookies.sessionId;
-  if (sessionId && sessions[sessionId]) {
-    req.session = sessions[sessionId];
-  } else {
-    req.session = {};
-  }
-  next();
+app.use(`${api_prefix}/brigade`, brigadeRouter);
+app.use(`${api_prefix}/armee`, armeeRouter);
+app.use(`${api_prefix}/garnizon`, garnizonRouter);
+app.use(`${api_prefix}/categorie_grade`, categorie_gradeRouter);
+app.use(`${api_prefix}/region`, regionRouter);
+app.use(`${api_prefix}/corge`, corgeRouter);
+app.use(`${api_prefix}/grade`, gradeRouter);
+app.use(`${api_prefix}/division`, divisionRouter);
+app.use(`${api_prefix}/departement`, departementRouter);
+// --------------------
+// PROTECTED EXAMPLE ROUTE
+// --------------------
+app.get(`${api_prefix}/admin/dashboard`, authMiddleware, (req, res) => {
+  res.json({
+    message: "Welcome to the admin dashboard!",
+    userId: req.user.userId
+  });
 });
 
-
-
-// // Sync Database and Start Server
-sequelize
-  .sync({ 
-    force: true, cascade: true 
-
-  })  
+// --------------------
+// START SERVER
+// --------------------
+sequelize.sync(
+ //{ force: true }  // Use { force: true } to drop and recreate tables on every server start (data loss)
+)
   .then(() => {
     app.listen(port, () => {
-      console.log(`Server is running on port ${port}`);
+      console.log(`✅ Server running on port ${port}`);
     });
   })
-  .catch((err) => {
-    console.error("Database synchronization error: ", err);
-  });
-
-
-  //
-
-  app.post(`${api_prefix}/user/login`, async (req, res) => {
-    const { username, password } = req.body;
-  
-    try {
-      const user = await User.findOne({
-        where: {
-          username,
-          password, // Note: In a real application, passwords should be hashed and compared securely
-        },
-      });
-  
-      if (user) {
-        // Generate a session ID
-        const sessionId = uuidv4();
-  
-        // Store user session in memory
-        sessions[sessionId] = {
-          userId: user.id, // Assuming you have a unique identifier for the user in your User model
-        };
-  
-        // Set a cookie with the session ID
-        res.cookie('sessionId', sessionId, { httpOnly: true });
-  
-        res.json({ success: true, sessionId });
-      } else {
-        res.status(401).json({ success: false, error: 'Invalid credentials' });
-      }
-    } catch (error) {
-      console.error('Error during login:', error);
-      res.status(500).json({ success: false, error: 'Internal Server Error' });
-    }
-  });
-  
-  // Example protected route
-  app.get(`${api_prefix}/admin/dashboard/`, (req, res) => {
-    if (req.session.userId) {
-      // User is authenticated, handle the request
-      res.json({ message: 'Welcome to the admin dashboard!' });
-    } else {
-      // User is not authenticated, handle accordingly
-      res.status(401).json({ error: 'Unauthorized' });
-    }
+  .catch(err => {
+    console.error("❌ Database synchronization error:", err);
   });

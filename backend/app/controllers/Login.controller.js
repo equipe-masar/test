@@ -1,30 +1,33 @@
 const User = require("../models/User.model");
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+require("dotenv").config({ path: "./app/config/.env" });
 
 const loginUser = async (req, res) => {
   const { username, password } = req.body;
+  if (!username || !password) return res.status(400).json({ message: "Username and password required" });
+
   try {
-    const user = await User.findOne({ where: { username: username } });
-    if (!user) {
-      console.log('User not found');
-      return res.status(401).json({ success: false, error: 'Invalid username or password.' });
-    }
+    const user = await User.findOne({ where: { username } });
+    if (!user) return res.status(401).json({ message: "Invalid credentials" });
 
-    const passwordMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
 
-    if (passwordMatch) {
-      console.log('Password is correct. User authenticated.');
+    const token = jwt.sign({ userId: user.username }, process.env.JWT_SECRET, { expiresIn: "1h" });
 
-      const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-      return res.status(200).json({ success: true, token, data: user });
-    } else {
-      console.log('Incorrect password');
-      return res.status(401).json({ success: false, error: 'Invalid username or password.' });
-    }
+    res.cookie("token", token, {
+      httpOnly: true,
+      sameSite: "strict",
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 60 * 60 * 1000,
+    });
+
+    const { password: _, ...userData } = user.toJSON();
+    res.json({ success: true, message: "Login successful", user: userData });
   } catch (error) {
-    console.error('Error during login:', error);
-    return res.status(500).json({ success: false, error: 'Failed to authenticate. Check the server logs for details.' });
+    console.error("Login error:", error);
+    res.status(500).json({ message: "Server error" });
   }
 };
 

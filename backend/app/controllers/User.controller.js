@@ -37,43 +37,32 @@ const getUserByUsername = async (req, res) => {
   }
 };
 
+
+
 const createUser = async (req, res) => {
   const { username, password, firstName, lastName, userRole } = req.body;
-
-  if (!username || !password || !firstName || !lastName || !userRole) {
-    return res.status(400).json({ success: false, error: 'All fields are required' });
-  }
+  if (!username || !password) return res.status(400).json({ message: "Username and password required" });
 
   try {
-    // Check if username exists
-    const existing = await User.findOne({ where: { username } });
-    if (existing) {
-      return res.status(409).json({ success: false, error: 'Username already exists' });
-    }
+    const existingUser = await User.findOne({ where: { username } });
+    if (existingUser) return res.status(409).json({ message: "Username exists" });
 
-    // Hash password
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-    const createdUser = await User.create({
+    const user = await User.create({
       username,
       password: hashedPassword,
-      firstName,
-      lastName,
-      userRole
+      state : 'active',
+      userRole,
     });
 
-    const { password: _, ...responseData } = createdUser.toJSON();
-
-    res.status(201).json({ success: true, data: responseData });
+    const { password: _, ...userData } = user.toJSON();
+    res.status(201).json({ success: true, message: "User created", user: userData });
   } catch (error) {
-    console.error('Error in createUser:', error);
-    let msg = error.message;
-    if (error.parent && error.parent.message) msg += ' | ' + error.parent.message;
-    res.status(500).json({ success: false, error: `Failed to create user: ${msg}` });
+    console.error("Error creating user:", error);
+    res.status(500).json({ success: false, error: "Server error" });
   }
 };
-
-  
 
   
 
