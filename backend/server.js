@@ -16,7 +16,18 @@ const corgeRouter = require("./app/routes/corgeRoute.routes");
 const gradeRouter = require("./app/routes/gradeRoute.routes");
 const divisionRouter = require("./app/routes/divisionRoute.routes");
 const departementRouter = require("./app/routes/departementRoute.routes");
+const gouvernementRouter = require("./app/routes/gouvernementRoute.routes");
 const authMiddleware = require("./app/middleware/auth.middleware");
+const delegationRouter = require("./app/routes/delegationRoute.routes");
+const typePassortRouter = require("./app/routes/typePassportRoute.routes");
+const GroupeSanguinRouter = require("./app/routes/groupeSanguinRoute.routes");
+const fonctionRouter = require("./app/routes/fonctionRoute.routes");
+const accidentRouter = require("./app/routes/accidentRoute.routes");
+const niveauScolaireRouter = require("./app/routes/niveauScolaireRoute.routes");
+const recrutementRouter = require("./app/routes/recrutementRoute.routes");
+const origineRecrutementRouter = require("./app/routes/origineRecrutementRoute.routes");
+const personnelRouter = require("./app/routes/personnelRoute.routes");
+
 
 const app = express();
 const port = process.env.PORT || 9000;
@@ -46,6 +57,17 @@ app.use(`${api_prefix}/corge`, corgeRouter);
 app.use(`${api_prefix}/grade`, gradeRouter);
 app.use(`${api_prefix}/division`, divisionRouter);
 app.use(`${api_prefix}/departement`, departementRouter);
+app.use(`${api_prefix}/gouvernement`, gouvernementRouter);
+app.use(`${api_prefix}/delegation`, delegationRouter);
+app.use(`${api_prefix}/type_passport`, typePassortRouter);
+app.use(`${api_prefix}/groupe_sanguin`, GroupeSanguinRouter);
+app.use(`${api_prefix}/fonction`, fonctionRouter);
+app.use(`${api_prefix}/accident`, accidentRouter);
+app.use(`${api_prefix}/niveauScolaire`, niveauScolaireRouter);
+app.use(`${api_prefix}/recrutement`, recrutementRouter);
+app.use(`${api_prefix}/origineRecrutement`, origineRecrutementRouter);
+app.use(`${api_prefix}/personnel`, personnelRouter);
+
 // --------------------
 // PROTECTED EXAMPLE ROUTE
 // --------------------
