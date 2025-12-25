@@ -38,13 +38,9 @@ const transfereInterRouter = require("./app/routes/transfereInterRoute.routes");
 const interruptuonRouter = require("./app/routes/interruptionRoute.routes");
 const historyInterruptionRouter = require("./app/routes/historyInterruptionRoute.routes");
 const SanctionRouter = require('./app/routes/sanctionRoute.routes');
-<<<<<<< HEAD
 const promotionRouter = require('./app/routes/PromotionRoute.routes');
-
-=======
 const DiplomeRouter = require('./app/routes/diplomeRoute.routes');
 const HistoryPromotionRouter = require('./app/routes/HistoryPromotionRoute.routes');
->>>>>>> ghada
 
 const app = express();
 const port = process.env.PORT || 9000;
