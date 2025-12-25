@@ -57,9 +57,14 @@ const situationRouter = require("./app/routes/SituationRoute.routes");
 const situationSPRouter = require("./app/routes/SituationSPRoute.routes");
 const situationSSRouter = require("./app/routes/SituationSSRoute.routes");
 const historySituationRouter = require("./app/routes/HistorySituationRoute.routes");
-
-
-
+const medailleCertificatRouter = require("./app/routes/MedailleCertificatRoute.routes");
+const historyMedailleCertifRouter = require("./app/routes/HistoryMedailleCertifRoute.routes");
+const validationServiceRouter = require("./app/routes/ValidationServiceRoute.routes");
+const HistoryValidationServiceRouter = require("./app/routes/HistoryValidationServiceRoute.routes");
+const historyCarteMilRouter = require("./app/routes/HistoryCarteMilRoute.routes");
+const NoteAnnuelleRouter = require("./app/routes/NoteAnnuelleRoute.routes");
+const NoteNuitRouter = require("./app/routes/NoteNuitRoute.routes");
+const permissionRouter = require("./app/routes/PermissionRoute.routes");
 
 
 const app = express();
@@ -129,7 +134,14 @@ app.use(`${api_prefix}/situation`, situationRouter);
 app.use(`${api_prefix}/situationSP`, situationSPRouter);
 app.use(`${api_prefix}/situationSS`, situationSSRouter);
 app.use(`${api_prefix}/historysituation`, historySituationRouter);
-
+app.use(`${api_prefix}/medaillecertificat`, medailleCertificatRouter);
+app.use(`${api_prefix}/historymedaillecertif`, historyMedailleCertifRouter);
+app.use(`${api_prefix}/validationservice`, validationServiceRouter);
+app.use(`${api_prefix}/historyvalidationservice`, HistoryValidationServiceRouter);
+app.use(`${api_prefix}/historycartemil`, historyCarteMilRouter);
+app.use(`${api_prefix}/noteannuelle`, NoteAnnuelleRouter);
+app.use(`${api_prefix}/notenuit`, NoteNuitRouter);
+app.use(`${api_prefix}/permission`, permissionRouter);
 
 
 

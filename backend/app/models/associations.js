@@ -42,9 +42,14 @@ const Accident = require("./Accident.model");
 const SituationSS = require("./SituationSS.model");
 const SituationSP = require("./SituationSP.model");
 const HistorySituation = require("./HistorySituation.model");
-
-
-
+const MedailleCertificat = require("./MedailleCertificat.model");
+const HistoryMedailleCertif = require("./HistoryMedailleCertif.model");
+const HistoryValidationService = require("./HistoryValidationService.model");
+const ValidationService = require("./ValidationService.model");
+const HistoryCarteMil = require("./HistoryCarteMil.model");
+const NoteAnnuelle = require("./NoteAnnuelle.model");
+const NoteNuit = require("./NoteNuit.model");
+const Permission = require("./Permission.model");
 
 
 //*****/
@@ -154,3 +159,34 @@ SituationSS.belongsTo(SituationSP, { foreignKey: "id_situation_sp", as: "situati
 HistorySituation.belongsTo(Personnel, { foreignKey: "id_personnel", as: "personnel" });
 HistorySituation.belongsTo(SituationSS, { foreignKey: "id_situationSS", as: "situationSS" });
 //  */
+Personnel.hasMany(HistoryMedailleCertif, {  foreignKey: "id_personnel"});
+HistoryMedailleCertif.belongsTo(Personnel, {  foreignKey: "id_personnel"});
+
+// MedailleCertificat → History
+MedailleCertificat.hasMany(HistoryMedailleCertif, {  foreignKey: "id_medaillecertif"});
+HistoryMedailleCertif.belongsTo(MedailleCertificat, {  foreignKey: "id_medaillecertif"});
+
+//  */
+
+Personnel.hasMany(HistoryValidationService, {  foreignKey: "id_personnel"});
+HistoryValidationService.belongsTo(Personnel, {  foreignKey: "id_personnel"});
+ValidationService.hasMany(HistoryValidationService, {  foreignKey: "id_validationService"});
+HistoryValidationService.belongsTo(ValidationService, {  foreignKey: "id_validationService"});
+
+//************* */
+Personnel.hasMany(HistoryCarteMil, {  foreignKey: "id_personnel"});
+HistoryCarteMil.belongsTo(Personnel, {  foreignKey: "id_personnel"});
+
+//**********     */
+
+Personnel.hasMany(NoteAnnuelle, {  foreignKey: "id_personnel"});
+NoteAnnuelle.belongsTo(Personnel, {  foreignKey: "id_personnel"});
+
+///****************** */
+Personnel.hasMany(NoteNuit, {  foreignKey: "id_personnel"});
+NoteNuit.belongsTo(Personnel, {  foreignKey: "id_personnel"});
+/**************** */
+
+// Role ↔ Permission
+Role.hasMany(Permission, {  foreignKey: "id_role"});
+Permission.belongsTo(Role, {  foreignKey: "id_role"});
