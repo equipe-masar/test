@@ -25,6 +25,8 @@ const TransfereExt = require("./TransfereExt.model");
 const TransfereInter = require("./TransfereInter.model");
 const Interruption = require("./Interruption.model");
 const HistoryInterruption = require("./HistoryInterruption.model");
+const HistoryPromotion = require("./HistoryPromotion.model");
+const Promotion = require("./Promotion.model");
 
 
 //*****/
@@ -99,4 +101,9 @@ HistoryInterruption.belongsTo(Personnel, { foreignKey: "id_personnel", as: "pers
 Interruption.hasMany(HistoryInterruption, { foreignKey: "id_interruption", as: "historyEntries" });
 HistoryInterruption.belongsTo(Interruption, { foreignKey: "id_interruption", as: "interruption" });
 
-module.exports = { Personnel, Interruption, HistoryInterruption };
+//*****/
+HistoryPromotion.belongsTo(Personnel, { foreignKey: "id_personnel", as: "personnel" });
+HistoryPromotion.belongsTo(Promotion, { foreignKey: "id_promotion", as: "promotion" });
+//******/
+
+
