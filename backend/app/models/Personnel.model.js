@@ -1,12 +1,7 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/db");
 
-// Import related tables
-const Delegation = require("./Delegation.model");
-const Recrutement = require("./Recrutement.model");
-const OrigineRecrutement = require("./OrigineRecrutement.model");
-const GroupeSanguin = require("./GroupeSanguin.model");
-const NiveauScolaire = require("./NiveauScolaire.model");
+
 
 const Personnel = sequelize.define("Personnel", {
   matrecule: {

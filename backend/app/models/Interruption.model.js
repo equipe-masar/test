@@ -1,19 +1,15 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/db");
 
-
-
-const Corge = sequelize.define("Corge", {
+const Interruption = sequelize.define("Interruption", {
   libelle: {
     type: DataTypes.STRING,
     allowNull: false,
-  },
-  abrv_libelle: {
-    type: DataTypes.STRING,
-    allowNull: false,
+    unique: true
   }
+}, {
+  tableName: "interruption",
+  timestamps: false
 });
 
-
-
-module.exports = Corge;
+module.exports = Interruption;

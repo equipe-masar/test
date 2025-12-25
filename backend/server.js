@@ -27,6 +27,18 @@ const niveauScolaireRouter = require("./app/routes/niveauScolaireRoute.routes");
 const recrutementRouter = require("./app/routes/recrutementRoute.routes");
 const origineRecrutementRouter = require("./app/routes/origineRecrutementRoute.routes");
 const personnelRouter = require("./app/routes/personnelRoute.routes");
+const userCorgeRouter = require("./app/routes/userCorgeRoute.routes");
+const userroleRouter = require("./app/routes/userRoleRoute.routes");
+const roleRouter = require("./app/routes/roleRoute.routes");
+const usercategoriegradeRouter = require("./app/routes/userCategorieGradeRoute.routes");
+const HistoryUserRouter = require("./app/routes/historyUserRoute.routes");
+const HistoryGradeRouter = require("./app/routes/historyGradeRoute.routes");
+const transfereExtRouter = require("./app/routes/transfereExtRoute.routes");
+const transfereInterRouter = require("./app/routes/transfereInterRoute.routes");
+const interruptuonRouter = require("./app/routes/interruptionRoute.routes");
+const historyInterruptionRouter = require("./app/routes/historyInterruptionRoute.routes");
+const SanctionRouter = require('./app/routes/sanctionRoute.routes');
+
 
 
 const app = express();
@@ -67,7 +79,17 @@ app.use(`${api_prefix}/niveauScolaire`, niveauScolaireRouter);
 app.use(`${api_prefix}/recrutement`, recrutementRouter);
 app.use(`${api_prefix}/origineRecrutement`, origineRecrutementRouter);
 app.use(`${api_prefix}/personnel`, personnelRouter);
-
+app.use(`${api_prefix}/usercorge`, userCorgeRouter);
+app.use(`${api_prefix}/userrole`, userroleRouter);
+app.use(`${api_prefix}/role`, roleRouter);
+app.use(`${api_prefix}/usercategoriegrade`, usercategoriegradeRouter);
+app.use(`${api_prefix}/historyuser`, HistoryUserRouter);
+app.use(`${api_prefix}/historygrade`, HistoryGradeRouter);
+app.use(`${api_prefix}/transfereext`, transfereExtRouter);
+app.use(`${api_prefix}/transfereinter`, transfereInterRouter);
+app.use(`${api_prefix}/interruption`, interruptuonRouter);
+app.use(`${api_prefix}/historyinterruption`, historyInterruptionRouter);
+app.use(`${api_prefix}/sanction`, SanctionRouter);
 // --------------------
 // PROTECTED EXAMPLE ROUTE
 // --------------------
@@ -82,7 +104,7 @@ app.get(`${api_prefix}/admin/dashboard`, authMiddleware, (req, res) => {
 // START SERVER
 // --------------------
 sequelize.sync(
- //{ force: true }  // Use { force: true } to drop and recreate tables on every server start (data loss)
+ { force: true }  // Use { force: true } to drop and recreate tables on every server start (data loss)
 )
   .then(() => {
     app.listen(port, () => {

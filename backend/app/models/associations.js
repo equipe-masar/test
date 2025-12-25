@@ -10,8 +10,21 @@ const Recrutement = require("./Recrutement.model");
 const OrigineRecrutement = require("./OrigineRecrutement.model");
 const GroupeSanguin = require("./GroupeSanguin.model");
 const NiveauScolaire = require("./NiveauScolaire.model");
-
-
+const User = require("./User.model");
+const UserCorge = require("./UserCorge.model");
+const Role = require("./Role.model");
+const UserRole = require("./UserRole.model");
+const Armee = require("./Armee.model");
+const Garnizon = require("./Garnizon.model");
+const Brigade = require("./Brigade.model");
+const Region = require("./Region.model");
+const UserCategorieGrade = require("./UserCategorieGrade.model");
+const HistoryUser = require("./HistoryUser.model");
+const HistoryGrade = require("./HistoryGrade.model");
+const TransfereExt = require("./TransfereExt.model");
+const TransfereInter = require("./TransfereInter.model");
+const Interruption = require("./Interruption.model");
+const HistoryInterruption = require("./HistoryInterruption.model");
 
 
 //*****/
@@ -28,8 +41,7 @@ Division.hasMany(Departement, { foreignKey: "id_division", as: "departements" })
 Delegation.belongsTo(Gouvernement, {  foreignKey: "id_gouvernement",  as: "gouvernement"});
 Gouvernement.hasMany(Delegation, {  foreignKey: "id_gouvernement",  as: "delegations"});
 //*****/
-// ------------------
-// Foreign keys
+
 // ------------------
 Personnel.belongsTo(Delegation, { foreignKey: "id_delegation", as: "delegation" });
 Personnel.belongsTo(Recrutement, { foreignKey: "id_recrutement", as: "recrutement" });
@@ -37,3 +49,54 @@ Personnel.belongsTo(OrigineRecrutement, { foreignKey: "id_origine_recrutement", 
 Personnel.belongsTo(GroupeSanguin, { foreignKey: "id_grpsanguin", as: "groupeSanguin" });
 Personnel.belongsTo(NiveauScolaire, { foreignKey: "id_niveau_scolaire", as: "niveauScolaire" });
 /*****   */
+// Foreign keys
+Corge.belongsTo(Armee, { foreignKey: "id_arme", as: "armee" });
+Corge.belongsTo(Garnizon, { foreignKey: "id_garnizon", as: "garnizon" });
+Corge.belongsTo(Brigade, { foreignKey: "id_brigade", as: "brigade" });
+Corge.belongsTo(Region, { foreignKey: "id_region", as: "region" });
+Corge.belongsTo(Corge, { foreignKey: "id_corge_soutient", as: "soutient" });
+/*****   */
+User.belongsToMany(Corge, {  through: UserCorge,  foreignKey: "id_user",  otherKey: "id_corge",  as: "corges"});
+Corge.belongsToMany(User, {  through: UserCorge,  foreignKey: "id_corge",  otherKey: "id_user",  as: "users"});
+/*****   */
+User.belongsToMany(Role, {  through: UserRole,  foreignKey: "id_user",  otherKey: "id_role",  as: "roles"});
+Role.belongsToMany(User, {  through: UserRole,  foreignKey: "id_role",  otherKey: "id_user",  as: "users"});
+/*****   */
+User.belongsToMany(Categorie_grade, {  through: UserCategorieGrade,  foreignKey: "id_user",  otherKey: "id_cat_grade",  as: "categorieGrades"});
+Categorie_grade.belongsToMany(User, {  through: UserCategorieGrade,  foreignKey: "id_cat_grade",  otherKey: "id_user",  as: "users"});
+/*****   */
+User.hasMany(HistoryUser, { foreignKey: "id_user", as: "history" });
+HistoryUser.belongsTo(User, { foreignKey: "id_user", as: "user" });
+//*****/
+
+Grade.hasMany(HistoryGrade, { foreignKey: "id_grade", as: "historyGrades" });
+HistoryGrade.belongsTo(Grade, { foreignKey: "id_grade", as: "grade" });
+Personnel.hasMany(HistoryGrade, { foreignKey: "id_personnel", as: "historyGrades" });
+HistoryGrade.belongsTo(Personnel, { foreignKey: "id_personnel", as: "personnel" });
+//*****/
+// Personnel has many external transfers
+Personnel.hasMany(TransfereExt, { foreignKey: "id_personnel", as: "transfereExts" });
+TransfereExt.belongsTo(Personnel, { foreignKey: "id_personnel", as: "personnel" });
+
+// Corge has many external transfers
+Corge.hasMany(TransfereExt, { foreignKey: "id_corge", as: "transfereExts" });
+TransfereExt.belongsTo(Corge, { foreignKey: "id_corge", as: "corge" });
+//*****/
+
+// Personnel has many internal transfers
+Personnel.hasMany(TransfereInter, { foreignKey: "id_personnel", as: "transfereInters" });
+TransfereInter.belongsTo(Personnel, { foreignKey: "id_personnel", as: "personnel" });
+
+// Departement has many internal transfers
+Departement.hasMany(TransfereInter, { foreignKey: "id_departement", as: "transfereInters" });
+TransfereInter.belongsTo(Departement, { foreignKey: "id_departement", as: "departement" });
+//*****/
+// Personnel has many interruptions
+Personnel.hasMany(HistoryInterruption, { foreignKey: "id_personnel", as: "historyInterruptions" });
+HistoryInterruption.belongsTo(Personnel, { foreignKey: "id_personnel", as: "personnel" });
+
+// Interruption has many history entries
+Interruption.hasMany(HistoryInterruption, { foreignKey: "id_interruption", as: "historyEntries" });
+HistoryInterruption.belongsTo(Interruption, { foreignKey: "id_interruption", as: "interruption" });
+
+module.exports = { Personnel, Interruption, HistoryInterruption };
