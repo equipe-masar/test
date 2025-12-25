@@ -27,6 +27,17 @@ const Interruption = require("./Interruption.model");
 const HistoryInterruption = require("./HistoryInterruption.model");
 const HistoryPromotion = require("./HistoryPromotion.model");
 const Promotion = require("./Promotion.model");
+const Fonction = require("./Fonction.model");
+const HistoryFunction = require("./HistoryFunction.model");
+const Ecole = require("./Ecole.model");
+const Pays = require("./Pays.model");
+const HistoryDiplome = require("./HistoryDiplome.model");
+const Diplome = require("./Diplome.model");
+const HistoryPassport = require("./HistoryPassport.model");
+const Passport = require("./Passport.model");
+const HistoryContrat = require("./HistoryContrat.model");
+const Contrat = require("./Contrat.model");
+
 
 
 //*****/
@@ -106,4 +117,24 @@ HistoryPromotion.belongsTo(Personnel, { foreignKey: "id_personnel", as: "personn
 HistoryPromotion.belongsTo(Promotion, { foreignKey: "id_promotion", as: "promotion" });
 //******/
 
+//***
+HistoryFunction.belongsTo(Personnel, { foreignKey: "id_personnel", as: "personnel" });
+HistoryFunction.belongsTo(Fonction, { foreignKey: "id_fonction", as: "fonction" });
 
+// */
+
+Ecole.belongsTo(Pays, { foreignKey: "id_pays", as: "pays" });
+
+//***
+HistoryDiplome.belongsTo(Personnel, { foreignKey: "id_personnel", as: "personnel" });
+HistoryDiplome.belongsTo(Diplome, { foreignKey: "id_diplome", as: "diplome" });
+HistoryDiplome.belongsTo(Ecole, { foreignKey: "id_ecole", as: "ecole" });
+//  */
+//***
+HistoryPassport.belongsTo(Personnel, { foreignKey: "id_personnel", as: "personnel" });
+HistoryPassport.belongsTo(Passport, { foreignKey: "id_passport", as: "passport" });
+//  */
+
+HistoryContrat.belongsTo(Personnel, { foreignKey: "id_personnel", as: "personnel" });
+HistoryContrat.belongsTo(Contrat, { foreignKey: "id_contrat", as: "contrat" });
+//  */
