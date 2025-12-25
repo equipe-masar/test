@@ -52,6 +52,11 @@ const PassportRouter = require('./app/routes/PassportRoute.routes');
 const HistoryPassportRouter = require('./app/routes/HistoryPassportRoute.routes');
 const ContratRouter = require('./app/routes/ContratRoute.routes');
 const HistoryContratRouter = require('./app/routes/HistoryContratRoute.routes');
+const historyAccidentRouter = require('./app/routes/HistoryAccidentRoute.routes');
+const situationRouter = require("./app/routes/SituationRoute.routes");
+const situationSPRouter = require("./app/routes/SituationSPRoute.routes");
+const situationSSRouter = require("./app/routes/SituationSSRoute.routes");
+const historySituationRouter = require("./app/routes/HistorySituationRoute.routes");
 
 
 
@@ -119,6 +124,11 @@ app.use(`${api_prefix}/passport`, PassportRouter);
 app.use(`${api_prefix}/historypassport`, HistoryPassportRouter);
 app.use(`${api_prefix}/contrat`, ContratRouter);
 app.use(`${api_prefix}/historycontrat`, HistoryContratRouter);
+app.use(`${api_prefix}/historyaccident`, historyAccidentRouter);
+app.use(`${api_prefix}/situation`, situationRouter);
+app.use(`${api_prefix}/situationSP`, situationSPRouter);
+app.use(`${api_prefix}/situationSS`, situationSSRouter);
+app.use(`${api_prefix}/historysituation`, historySituationRouter);
 
 
 

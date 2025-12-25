@@ -37,6 +37,13 @@ const HistoryPassport = require("./HistoryPassport.model");
 const Passport = require("./Passport.model");
 const HistoryContrat = require("./HistoryContrat.model");
 const Contrat = require("./Contrat.model");
+const HistoryAccident = require("./HistoryAccident.model");
+const Accident = require("./Accident.model");
+const SituationSS = require("./SituationSS.model");
+const SituationSP = require("./SituationSP.model");
+const HistorySituation = require("./HistorySituation.model");
+
+
 
 
 
@@ -137,4 +144,13 @@ HistoryPassport.belongsTo(Passport, { foreignKey: "id_passport", as: "passport" 
 
 HistoryContrat.belongsTo(Personnel, { foreignKey: "id_personnel", as: "personnel" });
 HistoryContrat.belongsTo(Contrat, { foreignKey: "id_contrat", as: "contrat" });
+//  */
+
+HistoryAccident.belongsTo(Personnel, { foreignKey: "id_personnel", as: "personnel" });
+HistoryAccident.belongsTo(Accident, { foreignKey: "id_accident", as: "accident" });
+//  */
+SituationSS.belongsTo(SituationSP, { foreignKey: "id_situation_sp", as: "situation_sp" });
+//  */
+HistorySituation.belongsTo(Personnel, { foreignKey: "id_personnel", as: "personnel" });
+HistorySituation.belongsTo(SituationSS, { foreignKey: "id_situationSS", as: "situationSS" });
 //  */
