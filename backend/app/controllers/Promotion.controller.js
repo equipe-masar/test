@@ -1,0 +1,79 @@
+const Promotion = require("../models/Promotion.model");
+
+// GET ALL
+const getAllPromotions = async (_, res) => {
+  try {
+    const promotions = await Promotion.findAll();
+    res.status(200).json({ success: true, data: promotions });
+  } catch (error) {
+    console.error("Error fetching promotions:", error);
+    res.status(500).json({ success: false, error: "Internal Server Error" });
+  }
+};
+
+// GET BY ID
+const getPromotionById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const promotion = await Promotion.findByPk(id);
+    if (!promotion) return res.status(404).json({ success: false, message: "Not found" });
+    res.status(200).json({ success: true, data: promotion });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, error: "Internal Server Error" });
+  }
+};
+
+// CREATE
+const createPromotion = async (req, res) => {
+  const { libelle } = req.body;
+  if (!libelle) return res.status(400).json({ success: false, message: "Libelle is required" });
+
+  try {
+    const promotion = await Promotion.create({ libelle });
+    res.status(201).json({ success: true, data: promotion });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, error: "Internal Server Error" });
+  }
+};
+
+// UPDATE
+const updatePromotion = async (req, res) => {
+  const { id } = req.params;
+  const { libelle } = req.body;
+
+  try {
+    const [updatedCount, updatedRows] = await Promotion.update(
+      { libelle },
+      { where: { id }, returning: true }
+    );
+    if (updatedCount === 0) return res.status(404).json({ success: false, message: "Not found" });
+    res.status(200).json({ success: true, data: updatedRows[0] });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, error: "Internal Server Error" });
+  }
+};
+
+// DELETE
+const deletePromotion = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const deleted = await Promotion.destroy({ where: { id } });
+    if (!deleted) return res.status(404).json({ success: false, message: "Not found" });
+    res.status(200).json({ success: true, message: "Deleted successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, error: "Internal Server Error" });
+  }
+};
+
+module.exports = {
+  getAllPromotions,
+  getPromotionById,
+  createPromotion,
+  updatePromotion,
+  deletePromotion
+};
