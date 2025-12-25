@@ -38,13 +38,22 @@ const transfereInterRouter = require("./app/routes/transfereInterRoute.routes");
 const interruptuonRouter = require("./app/routes/interruptionRoute.routes");
 const historyInterruptionRouter = require("./app/routes/historyInterruptionRoute.routes");
 const SanctionRouter = require('./app/routes/sanctionRoute.routes');
-<<<<<<< HEAD
 const promotionRouter = require('./app/routes/PromotionRoute.routes');
-
-=======
 const DiplomeRouter = require('./app/routes/diplomeRoute.routes');
 const HistoryPromotionRouter = require('./app/routes/HistoryPromotionRoute.routes');
->>>>>>> ghada
+const HistoryFunctionRouter = require('./app/routes/HistoryFunctionRoute.routes');
+const CongeRouter = require('./app/routes/CongeRoute.routes');
+const PaysRouter = require('./app/routes/PaysRoute.routes');
+const HistoryCongeRouter = require('./app/routes/HistoryCongeRoute.routes');
+const EcoleRouter = require('./app/routes/EcoleRoute.routes');
+const HistoryDiplomeRouter = require('./app/routes/HistoryDiplomeRoute.routes');
+const PassportRouter = require('./app/routes/PassportRoute.routes');
+const HistoryPassportRouter = require('./app/routes/HistoryPassportRoute.routes');
+const ContratRouter = require('./app/routes/ContratRoute.routes');
+const HistoryContratRouter = require('./app/routes/HistoryContratRoute.routes');
+
+
+
 
 const app = express();
 const port = process.env.PORT || 9000;
@@ -98,6 +107,19 @@ app.use(`${api_prefix}/sanction`, SanctionRouter);
 app.use(`${api_prefix}/promotion`, promotionRouter);
 app.use(`${api_prefix}/diplome`, DiplomeRouter);
 app.use(`${api_prefix}/historypromotion`, HistoryPromotionRouter);
+app.use(`${api_prefix}/historyfunction`, HistoryFunctionRouter);
+app.use(`${api_prefix}/conge`, CongeRouter);
+app.use(`${api_prefix}/pays`, PaysRouter);
+app.use(`${api_prefix}/historyconge`, HistoryCongeRouter);
+app.use(`${api_prefix}/ecole`, EcoleRouter);
+app.use(`${api_prefix}/historydiplome`, HistoryDiplomeRouter);
+app.use(`${api_prefix}/passport`, PassportRouter);
+app.use(`${api_prefix}/historypassport`, HistoryPassportRouter);
+app.use(`${api_prefix}/contrat`, ContratRouter);
+app.use(`${api_prefix}/historycontrat`, HistoryContratRouter);
+
+
+
 
 // --------------------
 // PROTECTED EXAMPLE ROUTE
