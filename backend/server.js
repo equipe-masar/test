@@ -41,7 +41,6 @@ const SanctionRouter = require('./app/routes/sanctionRoute.routes');
 const promotionRouter = require('./app/routes/PromotionRoute.routes');
 const DiplomeRouter = require('./app/routes/diplomeRoute.routes');
 const HistoryPromotionRouter = require('./app/routes/HistoryPromotionRoute.routes');
-
 const HistoryFunctionRouter = require('./app/routes/HistoryFunctionRoute.routes');
 const CongeRouter = require('./app/routes/CongeRoute.routes');
 const PaysRouter = require('./app/routes/PaysRoute.routes');
@@ -57,8 +56,11 @@ const situationRouter = require("./app/routes/SituationRoute.routes");
 const situationSPRouter = require("./app/routes/SituationSPRoute.routes");
 const situationSSRouter = require("./app/routes/SituationSSRoute.routes");
 const historySituationRouter = require("./app/routes/HistorySituationRoute.routes");
-
-
+const history_sanctionsRouter = require("./app/routes/HistorySanctionRoute.routes");
+const NoteNuit = require("./app/routes/NoteNuitRoute.routes");
+const NoteRendementRouter = require("./app/routes/NoteRendement.routes");
+const note_annuelleRouter = require("./app/routes/NoteAnnuelleRoute.routes");
+const historyCarteMilitaireRouter = require("./app/routes/HistoryCarteMilitaireRoute.routes");
 
 
 
@@ -129,6 +131,12 @@ app.use(`${api_prefix}/situation`, situationRouter);
 app.use(`${api_prefix}/situationSP`, situationSPRouter);
 app.use(`${api_prefix}/situationSS`, situationSSRouter);
 app.use(`${api_prefix}/historysituation`, historySituationRouter);
+app.use(`${api_prefix}/historysanctions`, history_sanctionsRouter);
+app.use(`${api_prefix}/notenuit`, NoteNuit);
+app.use(`${api_prefix}/noterendement`, NoteRendementRouter);
+app.use(`${api_prefix}/noteannuelle`, note_annuelleRouter);
+app.use(`${api_prefix}/historycartemilitaire`, historyCarteMilitaireRouter);
+
 
 
 

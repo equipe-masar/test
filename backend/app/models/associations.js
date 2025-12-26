@@ -42,7 +42,9 @@ const Accident = require("./Accident.model");
 const SituationSS = require("./SituationSS.model");
 const SituationSP = require("./SituationSP.model");
 const HistorySituation = require("./HistorySituation.model");
-
+const HistorySanction = require("./HistorySanction.model");
+const Sanction = require("./Sanction.model");
+const NoteNuit = require("./NoteNuit.model");
 
 
 
@@ -153,4 +155,9 @@ SituationSS.belongsTo(SituationSP, { foreignKey: "id_situation_sp", as: "situati
 //  */
 HistorySituation.belongsTo(Personnel, { foreignKey: "id_personnel", as: "personnel" });
 HistorySituation.belongsTo(SituationSS, { foreignKey: "id_situationSS", as: "situationSS" });
+//  */
+HistorySanction.belongsTo(Personnel, { foreignKey: "id_personnel", as: "personnel" });
+HistorySanction.belongsTo(Sanction, { foreignKey: "id_sanction", as: "sanction" });
+//  */
+NoteNuit.belongsTo(Personnel, { foreignKey: "id_personnel", as: "personnel" });
 //  */
