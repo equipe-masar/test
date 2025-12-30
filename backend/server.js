@@ -158,9 +158,9 @@ app.get(`${api_prefix}/admin/dashboard`, authMiddleware, (req, res) => {
 // --------------------
 // START SERVER
 // --------------------
-sequelize.sync(
- { force: true }  // Use { force: true } to drop and recreate tables on every server start (data loss)
-)
+const forceSync = (process.env.DB_FORCE_SYNC || 'false').toLowerCase() === 'true';
+
+sequelize.sync({ force: forceSync })
   .then(() => {
     app.listen(port, () => {
       console.log(`✅ Server running on port ${port}`);
