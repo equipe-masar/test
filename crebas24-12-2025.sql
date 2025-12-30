@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* Nom de SGBD :  Microsoft SQL Server 2008                     */
-/* Date de création :  24/12/2025 9:14:23                       */
+/* Date de crï¿½ation :  24/12/2025 9:14:23                       */
 /*==============================================================*/
 
 
@@ -874,7 +874,7 @@ go
 declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
-   'ÇáäŞáÉ ÇáÎÇÑÌíÉ',
+   'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½',
    'user', @CurrentUser, 'table', 'Transfert_ext'
 go
 
@@ -894,7 +894,7 @@ go
 declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
-   'ÇáäŞáÉ ÇáÏÇÎáíÉ',
+   'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½',
    'user', @CurrentUser, 'table', 'Transfert_int'
 go
 
@@ -976,7 +976,7 @@ go
 declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
-   'ÈØÇŞÇÊ ÇáÊÚÑíİ ÇáÚÓßÑíÉ',
+   'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½',
    'user', @CurrentUser, 'table', 'historique_carte_militaire'
 go
 
@@ -998,7 +998,7 @@ go
 declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
-   'ÇáÑÎÕ',
+   'ï¿½ï¿½ï¿½ï¿½ï¿½',
    'user', @CurrentUser, 'table', 'historique_conge'
 go
 
@@ -1033,7 +1033,7 @@ go
 declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
-   'ÇáÎØØ ÇáãÊÇÊáíÉ
+   'ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
    ',
    'user', @CurrentUser, 'table', 'historique_fonction'
 go
@@ -1054,7 +1054,7 @@ go
 declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
-   'ÇáÑÊÈ ÇáãÊÇÊáíÉ',
+   'ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½',
    'user', @CurrentUser, 'table', 'historique_grade'
 go
 
@@ -1102,7 +1102,7 @@ go
 declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
-   'ÇáæÖÚíÇÊ ÇáãÊÇÊáíÉ',
+   'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½',
    'user', @CurrentUser, 'table', 'historique_situation'
 go
 
@@ -1123,7 +1123,7 @@ go
 declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
-   'ÇáÕáæÍíÉ',
+   'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½',
    'user', @CurrentUser, 'table', 'historique_validite_service'
 go
 
@@ -1159,7 +1159,7 @@ go
 declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
-   'ÇáÅäŞØÇÚÇÊ',
+   'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½',
    'user', @CurrentUser, 'table', 'historiques_interruptions'
 go
 
@@ -1179,7 +1179,7 @@ go
 declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
-   'ÇáÃæÓãÉ æÇáÔåÇÆÏ',
+   'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½',
    'user', @CurrentUser, 'table', 'historiques_medailles_certificats'
 go
 
@@ -1201,7 +1201,7 @@ go
 declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
-   'ÇáÊäİíá',
+   'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½',
    'user', @CurrentUser, 'table', 'historiques_promotion'
 go
 
@@ -1373,7 +1373,7 @@ go
 declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
-   'ŞÇÆãÉ ÇáÅäŞØÇÚÇÊ',
+   'ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½',
    'user', @CurrentUser, 'table', 'liste_interruption'
 go
 
@@ -1393,7 +1393,7 @@ go
 declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
-   'ÃäæÇÚ ÇáÃæÓãÉ æÇáÔåÇÆÏ',
+   'ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½',
    'user', @CurrentUser, 'table', 'liste_medailles_certificats'
 go
 
@@ -1460,7 +1460,7 @@ go
 declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
-   'ŞÇÆãÉ ÇáÑÎÕ',
+   'ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½',
    'user', @CurrentUser, 'table', 'liste_type_conge'
 go
 
@@ -1565,7 +1565,7 @@ go
 declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
-   'ÇáæÖÚíÉ',
+   'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½',
    'user', @CurrentUser, 'table', 'situation'
 go
 
@@ -1583,7 +1583,7 @@ go
 declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
-   'ÇáæÖÚíÉ ÇáËÇäæíÉ 1
+   'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 1
    ',
    'user', @CurrentUser, 'table', 'situation_s1'
 go
@@ -1602,7 +1602,7 @@ go
 declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
-   'ÇáæÖÚíÉ ÇáËÇäæíÉ 2',
+   'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 2',
    'user', @CurrentUser, 'table', 'situation_s2'
 go
 
