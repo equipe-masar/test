@@ -2,6 +2,9 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext.jsx'
 import AdminNavbar from '../components/AdminNavbar.jsx'
+import modifIcon from '../assets/modif.png'
+import suppIcon from '../assets/supp.png'
+import ajoutIcon from '../assets/ajout.png'
 
 export default function GestionUtilisateurs() {
   const { user, role, loading: authLoading } = useAuth()
@@ -259,7 +262,10 @@ export default function GestionUtilisateurs() {
                 setIsModalOpen(true)
               }}
             >
-              Ajouter un utilisateur
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                <img src={ajoutIcon} alt="Ajouter" style={{ width: '18px', height: '18px' }} />
+                <span>Ajouter un utilisateur</span>
+              </span>
             </button>
           </div>
 
@@ -311,17 +317,19 @@ export default function GestionUtilisateurs() {
                       <td>
                         <button
                           type="button"
-                          style={{ marginRight: '6px' }}
+                          style={{ marginRight: '6px', padding: '4px 6px' }}
                           onClick={() => openEditModal(u)}
+                          title="Modifier"
                         >
-                          Modifier
+                          <img src={modifIcon} alt="Modifier" style={{ width: '18px', height: '18px' }} />
                         </button>
                         <button
                           type="button"
-                          style={{ marginRight: '6px' }}
+                          style={{ marginRight: '6px', padding: '4px 6px' }}
                           onClick={() => onDeleteUser(u.username)}
+                          title="Supprimer"
                         >
-                          Supprimer
+                          <img src={suppIcon} alt="Supprimer" style={{ width: '18px', height: '18px' }} />
                         </button>
                       </td>
                     </tr>
