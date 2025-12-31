@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext.jsx'
 
 export default function ValidateurPage() {
@@ -12,7 +12,17 @@ export default function ValidateurPage() {
           <div className="app-navTitle">GRH</div>
           <div className="app-navTag">VALIDATEUR</div>
         </div>
-        <button onClick={() => navigate('/logout')}>Logout</button>
+        <div className="app-navActions">
+          <Link
+            to="/profile"
+            className="app-circleBtn"
+            title="Profile"
+            aria-label="Profile"
+          >
+            {(user?.username || 'P')[0].toUpperCase()}
+          </Link>
+          <button onClick={() => navigate('/logout')}>Logout</button>
+        </div>
       </div>
 
       <div className="app-container">

@@ -73,7 +73,28 @@ const updateUser = async (req, res) => {
   } = req;
 
   try {
-    const [updatedRowsCount, updatedRows] = await User.update(body, {
+    // Allow-list fields that can be updated by this endpoint.
+    // (Role should not be editable by user update)
+    const payload = {};
+    if (Object.prototype.hasOwnProperty.call(body, 'matricule')) payload.matricule = body.matricule;
+    if (Object.prototype.hasOwnProperty.call(body, 'id_corge')) payload.id_corge = body.id_corge;
+
+    if (Object.prototype.hasOwnProperty.call(body, 'state')) {
+      const s = body.state;
+      if (typeof s === 'boolean') {
+        payload.state = s ? 'active' : 'inactive';
+      } else if (typeof s === 'string') {
+        const normalized = s.trim().toLowerCase();
+        if (normalized === 'active' || normalized === 'inactive') {
+          payload.state = normalized;
+        }
+      }
+    }
+
+    // Optionally allow password update (hashing) if needed in future.
+    // if (Object.prototype.hasOwnProperty.call(body, 'password')) { ... }
+
+    const [updatedRowsCount, updatedRows] = await User.update(payload, {
       where: { username },
       returning: true,
     });

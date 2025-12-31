@@ -63,6 +63,30 @@ body {
   gap: 10px;
 }
 
+.app-navActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.app-circleBtn {
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--app-border);
+  background: color-mix(in srgb, var(--app-surface) 90%, var(--app-bg));
+  color: var(--app-text);
+  text-decoration: none;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.app-circleBtn:hover {
+  border-color: var(--app-accent);
+}
+
 .app-navTitle {
   font-weight: 900;
   letter-spacing: 0.12em;
