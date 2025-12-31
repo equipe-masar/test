@@ -1,12 +1,9 @@
 import { useState, useEffect } from "react";
-import { Modal, Button, Form, Table } from "react-bootstrap";
-import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext.jsx';
 import AdminNavbar from '../components/AdminNavbar.jsx';
 
 export default function GestionCorge() {
   const { user, role } = useAuth();
-  const navigate = useNavigate();
   const [corges, setCorges] = useState([]);
   const [form, setForm] = useState({
     libelle: "",
@@ -224,12 +221,19 @@ export default function GestionCorge() {
             <span style={{ fontSize: '0.9rem', opacity: 0.8 }}>Total : {corges.length}</span>
           </div>
 
-          <Button variant="primary" className="mb-3" onClick={openAddModal}>
-            Ajouter un corge
-          </Button>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '12px' }}>
+            <button
+              type="button"
+              className="auth-primaryBtn"
+              style={{ width: 'auto' }}
+              onClick={openAddModal}
+            >
+              Ajouter un corge
+            </button>
+          </div>
 
-          <Table striped bordered hover>
-            <thead className="table-dark">
+          <table className="app-table">
+            <thead>
               <tr>
                 <th>ID</th>
                 <th>Libelle</th>
@@ -239,8 +243,8 @@ export default function GestionCorge() {
                 <th>Brigade</th>
                 <th>Region</th>
                 <th>Corge Soutient</th>
-                <th>Created At</th>
-                <th>Updated At</th>
+                <th>Créé le</th>
+                <th>Mis à jour le</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -259,155 +263,170 @@ export default function GestionCorge() {
                     <td>{formatDateTime(corge.createdAt)}</td>
                     <td>{formatDateTime(corge.updatedAt)}</td>
                     <td>
-                      <Button
-                        variant="warning"
-                        size="sm"
-                        className="me-2"
+                      <button
+                        type="button"
+                        style={{ marginRight: '6px' }}
                         onClick={() => openEditModal(corge)}
                       >
                         Éditer
-                      </Button>
-                      <Button
-                        variant="danger"
-                        size="sm"
+                      </button>
+                      <button
+                        type="button"
                         onClick={() => handleDelete(corge.id)}
                       >
                         Supprimer
-                      </Button>
+                      </button>
                     </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan="11" className="text-center">
+                  <td colSpan={11} style={{ textAlign: 'center' }}>
                     Aucun corge
                   </td>
                 </tr>
               )}
             </tbody>
-          </Table>
-
-          <Modal show={showModal} onHide={closeModal}>
-            <Modal.Header closeButton>
-              <Modal.Title>
-                {editingCorge ? 'Éditer Corge' : 'Ajouter Corge'}
-              </Modal.Title>
-            </Modal.Header>
-            <Form onSubmit={handleSubmit}>
-              <Modal.Body>
-                <Form.Group className="mb-3">
-                  <Form.Label>Libelle</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="libelle"
-                    value={form.libelle}
-                    onChange={handleChange}
-                    required
-                  />
-                </Form.Group>
-                <Form.Group className="mb-3">
-                  <Form.Label>Abrv Libelle</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="abrv_libelle"
-                    value={form.abrv_libelle}
-                    onChange={handleChange}
-                    required
-                  />
-                </Form.Group>
-                <Form.Group className="mb-3">
-                  <Form.Label>Armee</Form.Label>
-                  <Form.Select
-                    name="id_arme"
-                    value={form.id_arme}
-                    onChange={handleChange}
-                    required
-                  >
-                    <option value="">Select Armee</option>
-                    {armees.map((a) => (
-                      <option key={a.id} value={a.id}>
-                        {a.libelle}
-                      </option>
-                    ))}
-                  </Form.Select>
-                </Form.Group>
-                <Form.Group className="mb-3">
-                  <Form.Label>Garnizon</Form.Label>
-                  <Form.Select
-                    name="id_garnizon"
-                    value={form.id_garnizon}
-                    onChange={handleChange}
-                    required
-                  >
-                    <option value="">Select Garnizon</option>
-                    {garnizons.map((g) => (
-                      <option key={g.id} value={g.id}>
-                        {g.libelle}
-                      </option>
-                    ))}
-                  </Form.Select>
-                </Form.Group>
-                <Form.Group className="mb-3">
-                  <Form.Label>Brigade</Form.Label>
-                  <Form.Select
-                    name="id_brigade"
-                    value={form.id_brigade}
-                    onChange={handleChange}
-                    required
-                  >
-                    <option value="">Select Brigade</option>
-                    {brigades.map((b) => (
-                      <option key={b.id} value={b.id}>
-                        {b.libelle}
-                      </option>
-                    ))}
-                  </Form.Select>
-                </Form.Group>
-                <Form.Group className="mb-3">
-                  <Form.Label>Region</Form.Label>
-                  <Form.Select
-                    name="id_region"
-                    value={form.id_region}
-                    onChange={handleChange}
-                    required
-                  >
-                    <option value="">Select Region</option>
-                    {regions.map((r) => (
-                      <option key={r.id} value={r.id}>
-                        {r.libelle}
-                      </option>
-                    ))}
-                  </Form.Select>
-                </Form.Group>
-                <Form.Group className="mb-3">
-                  <Form.Label>Corge Soutient</Form.Label>
-                  <Form.Select
-                    name="id_corge_soutient"
-                    value={form.id_corge_soutient}
-                    onChange={handleChange}
-                    required
-                  >
-                    <option value="">Select Corge Soutient</option>
-                    {allCorges.map((c) => (
-                      <option key={c.id} value={c.id}>
-                        {c.libelle}
-                      </option>
-                    ))}
-                  </Form.Select>
-                </Form.Group>
-              </Modal.Body>
-              <Modal.Footer>
-                <Button variant="secondary" onClick={closeModal}>
-                  Annuler
-                </Button>
-                <Button variant="primary" type="submit">
-                  {editingCorge ? 'Mettre à jour' : 'Ajouter'}
-                </Button>
-              </Modal.Footer>
-            </Form>
-          </Modal>
+          </table>
         </div>
       </div>
+
+      {showModal && (
+        <div className="modal-backdrop" onClick={closeModal}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <div className="modal-title">{editingCorge ? 'Éditer un corge' : 'Ajouter un corge'}</div>
+              <button type="button" onClick={closeModal}>
+                X
+              </button>
+            </div>
+            <form onSubmit={handleSubmit}>
+              <div>
+                <label className="auth-label" htmlFor="libelle">Libelle</label>
+                <input
+                  id="libelle"
+                  type="text"
+                  name="libelle"
+                  value={form.libelle}
+                  onChange={handleChange}
+                  className="auth-input"
+                  required
+                />
+              </div>
+              <div>
+                <label className="auth-label" htmlFor="abrv_libelle">Abrv Libelle</label>
+                <input
+                  id="abrv_libelle"
+                  type="text"
+                  name="abrv_libelle"
+                  value={form.abrv_libelle}
+                  onChange={handleChange}
+                  className="auth-input"
+                  required
+                />
+              </div>
+              <div>
+                <label className="auth-label" htmlFor="id_arme">Armee</label>
+                <select
+                  id="id_arme"
+                  name="id_arme"
+                  value={form.id_arme}
+                  onChange={handleChange}
+                  className="auth-input"
+                  required
+                >
+                  <option value="">Select Armee</option>
+                  {armees.map((a) => (
+                    <option key={a.id} value={a.id}>
+                      {a.libelle}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="auth-label" htmlFor="id_garnizon">Garnizon</label>
+                <select
+                  id="id_garnizon"
+                  name="id_garnizon"
+                  value={form.id_garnizon}
+                  onChange={handleChange}
+                  className="auth-input"
+                  required
+                >
+                  <option value="">Select Garnizon</option>
+                  {garnizons.map((g) => (
+                    <option key={g.id} value={g.id}>
+                      {g.libelle}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="auth-label" htmlFor="id_brigade">Brigade</label>
+                <select
+                  id="id_brigade"
+                  name="id_brigade"
+                  value={form.id_brigade}
+                  onChange={handleChange}
+                  className="auth-input"
+                  required
+                >
+                  <option value="">Select Brigade</option>
+                  {brigades.map((b) => (
+                    <option key={b.id} value={b.id}>
+                      {b.libelle}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="auth-label" htmlFor="id_region">Region</label>
+                <select
+                  id="id_region"
+                  name="id_region"
+                  value={form.id_region}
+                  onChange={handleChange}
+                  className="auth-input"
+                  required
+                >
+                  <option value="">Select Region</option>
+                  {regions.map((r) => (
+                    <option key={r.id} value={r.id}>
+                      {r.libelle}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="auth-label" htmlFor="id_corge_soutient">Corge Soutient</label>
+                <select
+                  id="id_corge_soutient"
+                  name="id_corge_soutient"
+                  value={form.id_corge_soutient}
+                  onChange={handleChange}
+                  className="auth-input"
+                  required
+                >
+                  <option value="">Select Corge Soutient</option>
+                  {allCorges.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.libelle}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="modal-footer">
+                <button type="button" onClick={closeModal}>
+                  Annuler
+                </button>
+                <button type="submit" className="auth-primaryBtn">
+                  {editingCorge ? 'Mettre à jour' : 'Ajouter'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
