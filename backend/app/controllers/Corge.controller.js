@@ -48,8 +48,8 @@ const getCorgeById = async (req, res) => {
 // Create corge
 const createCorge = async (req, res) => {
   const { libelle, abrv_libelle, id_arme, id_garnizon, id_brigade, id_region, id_corge_soutient } = req.body;
-  if (!libelle || !abrv_libelle || !id_arme || !id_garnizon || !id_brigade || !id_region)
-    return res.status(400).json({ success: false, message: "All required fields must be provided" });
+  if (!libelle || !abrv_libelle || !id_arme || !id_garnizon)
+    return res.status(400).json({ success: false, message: "Libelle, abrv_libelle, id_arme and id_garnizon are required" });
 
   try {
     const corge = await Corge.create({
@@ -57,8 +57,8 @@ const createCorge = async (req, res) => {
       abrv_libelle,
       id_arme,
       id_garnizon,
-      id_brigade,
-      id_region,
+      id_brigade: id_brigade || null,
+      id_region: id_region || null,
       id_corge_soutient: id_corge_soutient || null
     });
 

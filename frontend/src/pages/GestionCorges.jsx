@@ -16,6 +16,9 @@ export default function GestionCorge() {
   const { user } = useAuth();
   const [corges, setCorges] = useState([]);
   const [form, setForm] = useState(initialForm);
+  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [hoveredButton, setHoveredButton] = useState(null);
 
   // Listes de données pour les menus déroulants
   const [armees, setArmees] = useState([]);
@@ -28,6 +31,7 @@ export default function GestionCorge() {
 
   // Chargement de toutes les données
   const fetchData = async () => {
+    setLoading(true);
     try {
       const [corgeRes, armeeRes, garnizonRes, brigadeRes, regionRes] = await Promise.all([
         fetch('/api/corge', { credentials: 'include' }),
@@ -50,6 +54,8 @@ export default function GestionCorge() {
       setRegions(rData.data || []);
     } catch (error) {
       console.error('Erreur lors du chargement des données:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -86,30 +92,57 @@ export default function GestionCorge() {
   };
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setForm({ ...form, [name]: value });
+    // Clear error on change
+    if (errors[name]) setErrors({ ...errors, [name]: '' });
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!form.libelle.trim()) newErrors.libelle = 'Libelle requis';
+    if (!form.abrv_libelle.trim()) newErrors.abrv_libelle = 'Abréviation requise';
+    if (!form.id_arme) newErrors.id_arme = 'Armée requise';
+    if (!form.id_garnizon) newErrors.id_garnizon = 'Garnison requise';
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validateForm()) return;
+    setLoading(true);
     const method = editingCorge ? 'PUT' : 'POST';
     const url = editingCorge ? `/api/corge/${editingCorge.id}` : '/api/corge';
 
     try {
+      // Convertir les strings vides en null
+      const dataToSend = {
+        ...form,
+        id_brigade: form.id_brigade || null,
+        id_region: form.id_region || null,
+        id_corge_soutient: form.id_corge_soutient || null
+      };
+
       const response = await fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify(form),
+        body: JSON.stringify(dataToSend),
       });
 
       if (response.ok) {
-        await fetchData(); // Rafraîchir la liste
+        await fetchData();
         closeModal();
       } else {
-        alert("Erreur lors de l'enregistrement");
+        const error = await response.json();
+        alert(error.message || "Erreur lors de l'enregistrement");
       }
     } catch (error) {
       console.error('Erreur réseau:', error);
+      alert('Erreur réseau');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -136,6 +169,8 @@ export default function GestionCorge() {
               + Ajouter un corge
             </button>
           </div>
+
+          {loading && <p>Chargement...</p>}
 
           <table className="app-table">
             <thead>
@@ -172,33 +207,63 @@ export default function GestionCorge() {
             </div>
 
             <form onSubmit={handleSubmit}>
-              <label className="auth-label">Libelle</label>
+              <label className="auth-label">Libelle *</label>
               <input name="libelle" value={form.libelle} onChange={handleChange} className="auth-input" required />
+              {errors.libelle && <span style={{ color: 'red' }}>{errors.libelle}</span>}
 
-              <label className="auth-label">Abréviation</label>
+              <label className="auth-label">Abréviation *</label>
               <input name="abrv_libelle" value={form.abrv_libelle} onChange={handleChange} className="auth-input" required />
+              {errors.abrv_libelle && <span style={{ color: 'red' }}>{errors.abrv_libelle}</span>}
 
-              <label className="auth-label">Armée</label>
+              <label className="auth-label">Armée *</label>
               <select name="id_arme" value={form.id_arme} onChange={handleChange} className="auth-input" required>
-                <option value="">Sélectionner...</option>
+                <option value="">Sélectionner une armée...</option>
                 {armees.map(a => <option key={a.id} value={a.id}>{a.libelle}</option>)}
               </select>
+              {errors.id_arme && <span style={{ color: 'red' }}>{errors.id_arme}</span>}
 
-              <label className="auth-label">Garnison</label>
+              <label className="auth-label">Garnison *</label>
               <select name="id_garnizon" value={form.id_garnizon} onChange={handleChange} className="auth-input" required>
-                <option value="">Sélectionner...</option>
+                <option value="">Sélectionner une garnison...</option>
                 {garnizons.map(g => <option key={g.id} value={g.id}>{g.libelle}</option>)}
               </select>
+              {errors.id_garnizon && <span style={{ color: 'red' }}>{errors.id_garnizon}</span>}
 
               <label className="auth-label">Région</label>
               <select name="id_region" value={form.id_region} onChange={handleChange} className="auth-input">
-                <option value="">Sélectionner...</option>
+                <option value="">Sélectionner une région (optionnel)...</option>
                 {regions.map(r => <option key={r.id} value={r.id}>{r.libelle}</option>)}
               </select>
 
-              <div className="modal-footer">
-                <button type="button" onClick={closeModal}>Annuler</button>
-                <button type="submit" className="auth-primaryBtn">Enregistrer</button>
+              <div className="modal-footer" style={{ flexDirection: 'column', gap: '10px' }}>
+                <button 
+                  type="submit" 
+                  className="auth-primaryBtn" 
+                  disabled={loading}
+                  onMouseEnter={() => setHoveredButton('submit')}
+                  onMouseLeave={() => setHoveredButton(null)}
+                  style={{
+                    backgroundColor: hoveredButton === 'submit' ? '#005fa3' : '#0066cc',
+                    transition: 'background-color 0.3s ease'
+                  }}
+                >
+                  {loading ? 'Enregistrement...' : 'Enregistrer'}
+                </button>
+                <button 
+                  type="button" 
+                  onClick={closeModal} 
+                  disabled={loading}
+                  onMouseEnter={() => setHoveredButton('cancel')}
+                  onMouseLeave={() => setHoveredButton(null)}
+                  style={{
+                    backgroundColor: hoveredButton === 'cancel' ? '#e0e0e0' : '#f0f0f0',
+                    transition: 'background-color 0.3s ease',
+                    border: '1px solid #ccc',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Annuler
+                </button>
               </div>
             </form>
           </div>
