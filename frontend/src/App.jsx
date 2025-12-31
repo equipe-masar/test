@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import { roleHomePath, useAuth } from './auth/AuthContext.jsx'
 import RequireAuth from './routes/RequireAuth.jsx'
 import LoginPage from './pages/Login.jsx'
+import LogoutPage from './pages/Logout.jsx'
 import AdminPage from './pages/Admin.jsx'
 import OperateurPage from './pages/Operateur.jsx'
 import ValidateurPage from './pages/Validateur.jsx'
@@ -18,6 +19,7 @@ export default function App() {
     <Routes>
       <Route path="/" element={<HomeRedirect />} />
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/logout" element={<LogoutPage />} />
 
       <Route element={<RequireAuth requiredRole="administrateur" />}>
         <Route path="/administrateur" element={<AdminPage />} />

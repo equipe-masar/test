@@ -33,35 +33,48 @@ export default function LoginPage() {
   }
 
   return (
-    <div style={{ maxWidth: 360, margin: '64px auto', textAlign: 'left' }}>
-      <h2>Login</h2>
-      <form onSubmit={onSubmit}>
-        <label>
-          Username
+    <div className="auth-shell">
+      <div className="auth-card">
+        <div className="auth-brand">
+          <div className="auth-brandTitle">GRH</div>
+          <div className="auth-badge">Accès sécurisé</div>
+        </div>
+
+        <h2 className="auth-title">Connexion</h2>
+        <div className="auth-subtitle">Application de gestion du personnel.</div>
+
+        <form onSubmit={onSubmit}>
+          <label className="auth-label">Username</label>
           <input
+            className="auth-input"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             autoComplete="username"
-            style={{ width: '100%', padding: 8, marginTop: 6, marginBottom: 12 }}
+            placeholder=""
           />
-        </label>
-        <label>
-          Password
+
+          <label className="auth-label">Password</label>
           <input
+            className="auth-input"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             autoComplete="current-password"
-            style={{ width: '100%', padding: 8, marginTop: 6, marginBottom: 12 }}
+            placeholder=""
           />
-        </label>
-        {error ? <div style={{ color: 'crimson', marginBottom: 12 }}>{error}</div> : null}
-        <button type="submit" disabled={submitting} style={{ width: '100%', padding: 10 }}>
-          {submitting ? 'Signing in…' : 'Sign in'}
-        </button>
-      </form>
-      <div style={{ marginTop: 12, fontSize: 12, opacity: 0.8 }}>
-        Seed admin par défaut: username <b>admin</b> / password <b>admin123</b>
+
+          {error ? (
+            <div className="auth-alert">
+              <div className="auth-alertTitle">Erreur</div>
+              <div>{error}</div>
+            </div>
+          ) : null}
+
+          <button className="auth-primaryBtn" type="submit" disabled={submitting}>
+            {submitting ? 'Signing in…' : 'Sign in'}
+          </button>
+        </form>
+
       </div>
     </div>
   )

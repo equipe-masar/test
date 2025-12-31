@@ -1,27 +1,31 @@
+import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext.jsx'
 
 export default function AdminPage() {
-  const { user, role, logout } = useAuth()
+  const { user, role } = useAuth()
+  const navigate = useNavigate()
 
   return (
-    <div>
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: '12px 16px',
-          borderBottom: '1px solid #ddd',
-        }}
-      >
-        <div style={{ fontWeight: 700 }}>GRH</div>
-        <button onClick={logout}>Logout</button>
+    <div className="app-page">
+      <div className="app-nav">
+        <div className="app-navLeft">
+          <div className="app-navTitle">GRH</div>
+          <div className="app-navTag">ADMIN</div>
+        </div>
+        <button onClick={() => navigate('/logout')}>Logout</button>
       </div>
 
-      <div style={{ padding: 24 }}>
-        <h2>Dashboard Administrateur</h2>
-        <div>Utilisateur: {user?.username}</div>
-        <div>Rôle: {role}</div>
+      <div className="app-container">
+        <div className="app-card">
+          <h2 style={{ marginTop: 0 }}>Dashboard Administrateur</h2>
+          <div className="app-kv">
+            <div className="app-k">Utilisateur</div>
+            <div className="app-v">{user?.username || '-'}</div>
+
+            <div className="app-k">Rôle</div>
+            <div className="app-v">{role || '-'}</div>
+          </div>
+        </div>
       </div>
     </div>
   )

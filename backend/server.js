@@ -161,7 +161,20 @@ app.get(`${api_prefix}/admin/dashboard`, authMiddleware, (req, res) => {
 const forceSync = (process.env.DB_FORCE_SYNC || 'false').toLowerCase() === 'true';
 
 sequelize.sync({ force: forceSync })
-  .then(() => {
+  .then(async () => {
+    const { runAllSeedersIfEnabled } = require('./app/seed/runAllSeeders');
+    const { autoSeedIfEnabled } = require('./app/seed/autoSeed');
+
+    const didRunAllSeeders = await runAllSeedersIfEnabled();
+    if (didRunAllSeeders) {
+      console.log('✅ Auto-seed (tous les seeders) terminé.');
+    } else {
+      await autoSeedIfEnabled();
+      if (String(process.env.DB_AUTO_SEED || 'false').toLowerCase() === 'true') {
+        console.log('✅ Auto-seed initial (roles+admin) terminé.');
+      }
+    }
+
     app.listen(port, () => {
       console.log(`✅ Server running on port ${port}`);
     });

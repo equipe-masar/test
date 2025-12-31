@@ -1,16 +1,32 @@
+import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext.jsx'
 
 export default function ValidateurPage() {
-  const { user, role, logout } = useAuth()
+  const { user, role } = useAuth()
+  const navigate = useNavigate()
 
   return (
-    <div style={{ padding: 24 }}>
-      <h2>Page Validateur</h2>
-      <div>Utilisateur: {user?.username}</div>
-      <div>Rôle: {role}</div>
-      <button onClick={logout} style={{ marginTop: 12 }}>
-        Logout
-      </button>
+    <div className="app-page">
+      <div className="app-nav">
+        <div className="app-navLeft">
+          <div className="app-navTitle">GRH</div>
+          <div className="app-navTag">VALIDATEUR</div>
+        </div>
+        <button onClick={() => navigate('/logout')}>Logout</button>
+      </div>
+
+      <div className="app-container">
+        <div className="app-card">
+          <h2 style={{ marginTop: 0 }}>Dashboard Validateur</h2>
+          <div className="app-kv">
+            <div className="app-k">Utilisateur</div>
+            <div className="app-v">{user?.username || '-'}</div>
+
+            <div className="app-k">Rôle</div>
+            <div className="app-v">{role || '-'}</div>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
