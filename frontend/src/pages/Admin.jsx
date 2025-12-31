@@ -15,8 +15,8 @@ export default function AdminPage() {
 
           {/* Liens Navbar */}
           <nav className="app-navLinks">
-           
-            <Link to="/administrateur/corges">Gestion Corges</Link> {/* Nouveau lien */}
+            <Link to="/administrateur/utilisateurs">Gestion Utilisateurs     </Link>
+            <Link to="/administrateur/corges">Gestion Corges</Link>
           </nav>
         </div>
 

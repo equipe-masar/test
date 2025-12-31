@@ -8,6 +8,7 @@ import AdminPage from './pages/Admin.jsx'
 import OperateurPage from './pages/Operateur.jsx'
 import ValidateurPage from './pages/Validateur.jsx'
 import GestionCorges from './pages/GestionCorges.jsx' // جديد
+import GestionUtilisateurs from './pages/GestionUtilisateurs.jsx'
 
 function HomeRedirect() {
   const { loading, user, role } = useAuth()
@@ -29,6 +30,7 @@ export default function App() {
       {/* ADMIN */}
       <Route element={<RequireAuth requiredRole="administrateur" />}>
         <Route path="/administrateur" element={<AdminPage />} />
+        <Route path="/administrateur/utilisateurs" element={<GestionUtilisateurs />} />
         <Route path="/administrateur/corges" element={<GestionCorges />} /> {/* Nouveau lien */}
       </Route>
 

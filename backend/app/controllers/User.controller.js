@@ -40,7 +40,7 @@ const getUserByUsername = async (req, res) => {
 
 
 const createUser = async (req, res) => {
-  const { username, password, firstName, lastName, userRole } = req.body;
+  const { username, password, matricule, userRole } = req.body;
   if (!username || !password) return res.status(400).json({ message: "Username and password required" });
 
   try {
@@ -51,6 +51,7 @@ const createUser = async (req, res) => {
 
     const user = await User.create({
       username,
+      matricule,
       password: hashedPassword,
       state : 'active',
       userRole,
