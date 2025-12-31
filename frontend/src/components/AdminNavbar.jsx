@@ -1,8 +1,18 @@
+import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext.jsx'
 
 export default function AdminNavbar() {
   const { user } = useAuth()
+  const [theme, setTheme] = useState(() => {
+    if (typeof window === 'undefined') return 'dark'
+    return window.localStorage.getItem('theme') || 'dark'
+  })
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme)
+    window.localStorage.setItem('theme', theme)
+  }, [theme])
   const navigate = useNavigate()
 
   const initial = (user?.username || 'A')[0].toUpperCase()
@@ -50,6 +60,20 @@ export default function AdminNavbar() {
       </div>
 
       <div className="app-navActions" style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+        <button
+          type="button"
+          onClick={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))}
+          style={{
+            padding: '6px 10px',
+            borderRadius: '999px',
+            fontSize: '12px',
+            backgroundColor: '#444',
+            color: '#fff',
+            border: '1px solid rgba(255,255,255,0.3)',
+          }}
+        >
+          {theme === 'dark' ? '🌙 Dark' : '☀️ Light'}
+        </button>
         <Link
           to="/profile"
           style={{

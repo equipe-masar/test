@@ -22,6 +22,17 @@
   --app-radius: 14px;
 }
 
+/* Light theme override when toggled explicitly */
+html[data-theme="light"] {
+  --app-bg: #ffffff;
+  --app-text: #213547;
+  --app-surface: #f9f9f9;
+  --app-border: rgba(0, 0, 0, 0.12);
+  --app-muted: rgba(33, 53, 71, 0.75);
+  color: var(--app-text);
+  background-color: var(--app-bg);
+}
+
 a {
   font-weight: 500;
   color: #646cff;
