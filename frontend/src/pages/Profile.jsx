@@ -122,13 +122,67 @@ export default function ProfilePage() {
           <div className="app-navTitle">GRH</div>
           <div className="app-navTag">PROFILE</div>
 
-          <nav className="app-navLinks">
-            <Link to="/">Home</Link>
+          <nav 
+            className="app-navLinks"
+            style={{
+              display: 'flex',
+              gap: '10px',
+              padding: '10px',
+              background: '#f4f4f4',
+            }}
+          >
+            <Link to="/">
+              <button
+                style={{
+                  width: 'auto',
+                  padding: '8px 16px',
+                  backgroundColor: '#34495e',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  fontWeight: '500',
+                  transition: 'all 0.3s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = '#2c3e50';
+                  e.currentTarget.style.transform = 'scale(1.05)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = '#34495e';
+                  e.currentTarget.style.transform = 'scale(1)';
+                }}
+              >
+                Home
+              </button>
+            </Link>
           </nav>
         </div>
 
         <div style={{ display: 'flex', gap: 10 }}>
-          <button onClick={() => navigate('/logout')}>Logout</button>
+          <button
+            onClick={() => navigate('/logout')}
+            style={{
+              padding: '8px 16px',
+              borderRadius: '8px',
+              border: 'none',
+              backgroundColor: '#34495e',
+              color: 'white',
+              fontWeight: '500',
+              cursor: 'pointer',
+              transition: 'all 0.3s ease',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = '#2c3e50';
+              e.currentTarget.style.transform = 'scale(1.05)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = '#34495e';
+              e.currentTarget.style.transform = 'scale(1)';
+            }}
+          >
+            Logout
+          </button>
         </div>
       </div>
 
