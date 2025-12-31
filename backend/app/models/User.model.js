@@ -7,6 +7,14 @@ const User = sequelize.define("User", {
     primaryKey: true, // THIS IS ENOUGH
     // remove any "unique: true" if present
   },
+  id_corge: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+  },
+  matricule: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
   password: {
     type: DataTypes.STRING,
     allowNull: false,

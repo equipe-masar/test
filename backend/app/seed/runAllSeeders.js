@@ -31,7 +31,9 @@ async function runAllSeedersIfEnabled() {
   const pending = await umzug.pending();
   if (!pending.length) {
     console.log('ℹ️ Aucun seeder en attente.');
-    return true;
+    // Aucun seeder n'a �t� ex�cut� dans ce cycle ->
+    // laisser la main � autoSeed pour peupler les donn�es minimales
+    return false;
   }
 
   console.log(`🌱 Seeders en attente: ${pending.map((p) => p.file).join(', ')}`);

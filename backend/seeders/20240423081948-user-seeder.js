@@ -38,6 +38,7 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
     const now = new Date();
     const adminUsername = 'admin';
+    const adminMatricule = 'M0001';
     const adminPassword = await bcrypt.hash('admin123', saltRounds);
 
     // 1) Seed roles catalog (table: Roles)
@@ -66,6 +67,8 @@ module.exports = {
     if (!adminExists) {
       await queryInterface.bulkInsert('Users', [{
         username: adminUsername,
+        matricule: adminMatricule,
+        id_corge: null,
         password: adminPassword,
         state: 'active',
         userRole: 'administrateur',

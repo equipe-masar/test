@@ -5,7 +5,7 @@ const UserCorge = sequelize.define(
   "UserCorge",
   {
     id_user: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       allowNull: false,
       primaryKey: true
     },

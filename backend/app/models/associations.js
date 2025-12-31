@@ -81,6 +81,9 @@ Corge.belongsTo(Brigade, { foreignKey: "id_brigade", as: "brigade" });
 Corge.belongsTo(Region, { foreignKey: "id_region", as: "region" });
 Corge.belongsTo(Corge, { foreignKey: "id_corge_soutient", as: "soutient" });
 /*****   */
+User.belongsTo(Corge, { foreignKey: "id_corge", as: "corge" });
+Corge.hasMany(User, { foreignKey: "id_corge", as: "usersWithMainCorge" });
+/*****   */
 User.belongsToMany(Corge, {  through: UserCorge,  foreignKey: "id_user",  otherKey: "id_corge",  as: "corges"});
 Corge.belongsToMany(User, {  through: UserCorge,  foreignKey: "id_corge",  otherKey: "id_user",  as: "users"});
 /*****   */
