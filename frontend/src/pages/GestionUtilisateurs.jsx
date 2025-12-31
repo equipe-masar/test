@@ -4,7 +4,7 @@ import { useAuth } from '../auth/AuthContext.jsx'
 import AdminNavbar from '../components/AdminNavbar.jsx'
 
 export default function GestionUtilisateurs() {
-  const { user, role } = useAuth()
+  const { user, role, loading: authLoading } = useAuth()
   const navigate = useNavigate()
 
   const [users, setUsers] = useState([])
@@ -17,18 +17,22 @@ export default function GestionUtilisateurs() {
   const [editing, setEditing] = useState(false)
   const [editError, setEditError] = useState(null)
   const [editingOriginalUsername, setEditingOriginalUsername] = useState(null)
+  const [roles, setRoles] = useState([])
+  const [corges, setCorges] = useState([])
   const [form, setForm] = useState({
     username: '',
     matricule: '',
     password: '',
     confirmPassword: '',
     userRole: 'operateur',
+    id_corge: '',
   })
 
   const [editForm, setEditForm] = useState({
     username: '',
     matricule: '',
     userRole: 'operateur',
+    id_corge: '',
   })
 
   async function loadUsers() {
@@ -50,8 +54,40 @@ export default function GestionUtilisateurs() {
     }
   }
 
+  async function loadRoles() {
+    try {
+      const res = await fetch('/api/role', {
+        credentials: 'include',
+      })
+      const data = await res.json().catch(() => ([]))
+      if (!res.ok) {
+        throw new Error(data?.message || 'Erreur lors du chargement des rôles')
+      }
+      setRoles(Array.isArray(data) ? data : [])
+    } catch (err) {
+      console.error('Erreur chargement rôles:', err)
+    }
+  }
+
+  async function loadCorges() {
+    try {
+      const res = await fetch('/api/corge', {
+        credentials: 'include',
+      })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok) {
+        throw new Error(data?.message || 'Erreur lors du chargement des corges')
+      }
+      setCorges(Array.isArray(data.data) ? data.data : [])
+    } catch (err) {
+      console.error('Erreur chargement corges:', err)
+    }
+  }
+
   useEffect(() => {
     loadUsers()
+    loadRoles()
+    loadCorges()
   }, [])
 
   const onChangeField = (e) => {
@@ -88,6 +124,7 @@ export default function GestionUtilisateurs() {
           matricule: form.matricule,
           password: form.password,
           userRole: form.userRole,
+          id_corge: form.id_corge || null,
         }),
       })
       const data = await res.json().catch(() => ({}))
@@ -112,6 +149,7 @@ export default function GestionUtilisateurs() {
       username: userToEdit.username,
       matricule: userToEdit.matricule || '',
       userRole: userToEdit.userRole || 'operateur',
+      id_corge: userToEdit.id_corge || '',
     })
     setIsEditModalOpen(true)
   }
@@ -192,12 +230,23 @@ export default function GestionUtilisateurs() {
 
   return (
     <div className="app-page">
-      {/* NAVBAR */}
       <AdminNavbar />
 
-      {/* CONTENU PAGE */}
-      <div className="app-container">
-        <div className="app-card">
+      {authLoading ? (
+        <div className="app-container">
+          <div className="app-card">
+            <p>Chargement des informations utilisateur…</p>
+          </div>
+        </div>
+      ) : role !== 'administrateur' ? (
+        <div className="app-container">
+          <div className="app-card">
+            <p>Accès refusé : cette page est réservée aux administrateurs.</p>
+          </div>
+        </div>
+      ) : (
+        <div className="app-container">
+          <div className="app-card">
           <h2 style={{ marginTop: 0 }}>Gestion des Utilisateurs</h2>
           <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '12px' }}>
             <button
@@ -223,23 +272,27 @@ export default function GestionUtilisateurs() {
                 <tr>
                   <th>Username</th>
                   <th>Matricule</th>
+                  <th>Corge</th>
                   <th>Rôle</th>
                   <th>Statut</th>
                   <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {users.length === 0 ? (
+                {users.filter((u) => u.userRole !== 'administrateur').length === 0 ? (
                   <tr>
-                    <td colSpan={5} style={{ textAlign: 'center' }}>
+                    <td colSpan={6} style={{ textAlign: 'center' }}>
                       Aucun utilisateur trouvé.
                     </td>
                   </tr>
                 ) : (
-                  users.map((u) => (
+                  users
+                    .filter((u) => u.userRole !== 'administrateur')
+                    .map((u) => (
                     <tr key={u.username}>
                       <td>{u.username}</td>
                       <td>{u.matricule || '-'}</td>
+                      <td>{corges.find((c) => c.id === u.id_corge)?.libelle || '-'}</td>
                       <td>{u.userRole || '-'}</td>
                       <td>
                         <button
@@ -278,9 +331,10 @@ export default function GestionUtilisateurs() {
             </table>
           )}
         </div>
-      </div>
+        </div>
+      )}
 
-      {isModalOpen && (
+      {role === 'administrateur' && isModalOpen && (
         <div className="modal-backdrop" onClick={() => setIsModalOpen(false)}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
@@ -335,6 +389,23 @@ export default function GestionUtilisateurs() {
                 />
               </div>
               <div>
+                <label className="auth-label" htmlFor="corge-modal">Corge</label>
+                <select
+                  id="corge-modal"
+                  name="id_corge"
+                  className="auth-input"
+                  value={form.id_corge}
+                  onChange={onChangeField}
+                >
+                  <option value="">Sélectionner...</option>
+                  {corges.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.libelle}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
                 <label className="auth-label" htmlFor="userRole-modal">Rôle</label>
                 <select
                   id="userRole-modal"
@@ -343,9 +414,14 @@ export default function GestionUtilisateurs() {
                   value={form.userRole}
                   onChange={onChangeField}
                 >
-                  <option value="operateur">Opérateur</option>
-                  <option value="validateur">Validateur</option>
-                  <option value="administrateur">Administrateur</option>
+                  <option value="">Sélectionner...</option>
+                  {roles
+                    .filter((r) => r.libelle !== 'administrateur')
+                    .map((r) => (
+                      <option key={r.id} value={r.libelle}>
+                        {r.libelle}
+                      </option>
+                    ))}
                 </select>
               </div>
               {createError && (
@@ -375,7 +451,7 @@ export default function GestionUtilisateurs() {
         </div>
       )}
 
-      {isEditModalOpen && (
+      {role === 'administrateur' && isEditModalOpen && (
         <div className="modal-backdrop" onClick={() => setIsEditModalOpen(false)}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
@@ -408,6 +484,23 @@ export default function GestionUtilisateurs() {
                 />
               </div>
               <div>
+                <label className="auth-label" htmlFor="edit-corge">Corge</label>
+                <select
+                  id="edit-corge"
+                  name="id_corge"
+                  className="auth-input"
+                  value={editForm.id_corge}
+                  onChange={onChangeEditField}
+                >
+                  <option value="">Sélectionner...</option>
+                  {corges.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.libelle}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
                 <label className="auth-label" htmlFor="edit-userRole">Rôle</label>
                 <select
                   id="edit-userRole"
@@ -416,9 +509,14 @@ export default function GestionUtilisateurs() {
                   value={editForm.userRole}
                   onChange={onChangeEditField}
                 >
-                  <option value="operateur">Opérateur</option>
-                  <option value="validateur">Validateur</option>
-                  <option value="administrateur">Administrateur</option>
+                  <option value="">Sélectionner...</option>
+                  {roles
+                    .filter((r) => r.libelle !== 'administrateur')
+                    .map((r) => (
+                      <option key={r.id} value={r.libelle}>
+                        {r.libelle}
+                      </option>
+                    ))}
                 </select>
               </div>
               {editError && (

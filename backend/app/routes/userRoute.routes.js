@@ -9,6 +9,7 @@ const {
 const { loginUser, getMe } = require("../controllers/Login.controller");
 const { logoutUser } = require("../controllers/Logout.controller"); // optional if you have logout
 const authMiddleware = require("../middleware/auth.middleware");
+const { requireAdmin } = require("../middleware/role.middleware");
 
 const userRouter = Router();
 
@@ -17,14 +18,14 @@ userRouter.route("/login").post(loginUser);
 userRouter.route("/logout").post(logoutUser);
 userRouter.route("/me").get(authMiddleware, getMe);
 
-// CRUD routes
+// CRUD routes (protégées, réservées à l'administrateur)
 userRouter.route("/")
-  .get(getAllUser)
-  .post(createUser);
+  .get(authMiddleware, requireAdmin, getAllUser)
+  .post(authMiddleware, requireAdmin, createUser);
 
 userRouter.route("/:username")
-  .get(getUserByUsername)
-  .put(updateUser)
-  .delete(deleteUser);
+  .get(authMiddleware, requireAdmin, getUserByUsername)
+  .put(authMiddleware, requireAdmin, updateUser)
+  .delete(authMiddleware, requireAdmin, deleteUser);
 
 module.exports = userRouter;
