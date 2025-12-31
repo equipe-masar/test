@@ -9,6 +9,7 @@ import OperateurPage from './pages/Operateur.jsx'
 import ValidateurPage from './pages/Validateur.jsx'
 import GestionCorges from './pages/GestionCorges.jsx' // جديد
 import GestionUtilisateurs from './pages/GestionUtilisateurs.jsx'
+import ProfilePage from './pages/Profile.jsx'
 
 function HomeRedirect() {
   const { loading, user, role } = useAuth()
@@ -42,6 +43,11 @@ export default function App() {
       {/* VALIDATEUR */}
       <Route element={<RequireAuth requiredRole="validateur" />}>
         <Route path="/validateur" element={<ValidateurPage />} />
+      </Route>
+
+      {/* PROFILE (any authenticated user) */}
+      <Route element={<RequireAuth />}>
+        <Route path="/profile" element={<ProfilePage />} />
       </Route>
 
       {/* 404 */}

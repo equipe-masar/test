@@ -17,10 +17,21 @@ export default function AdminPage() {
           <nav className="app-navLinks">
             <Link to="/administrateur/utilisateurs">Gestion Utilisateurs     </Link>
             <Link to="/administrateur/corges">Gestion Corges</Link>
+            <Link to="/administrateur/corges">Gestion Corges</Link> {/* Nouveau lien */}
           </nav>
         </div>
 
-        <button onClick={() => navigate('/logout')}>Logout</button>
+        <div className="app-navActions">
+          <Link
+            to="/profile"
+            className="app-circleBtn"
+            title="Profile"
+            aria-label="Profile"
+          >
+            {(user?.username || 'P')[0].toUpperCase()}
+          </Link>
+          <button onClick={() => navigate('/logout')}>Logout</button>
+        </div>
       </div>
 
       {/* CONTENU PAGE */}

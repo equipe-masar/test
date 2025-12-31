@@ -159,8 +159,10 @@ app.get(`${api_prefix}/admin/dashboard`, authMiddleware, (req, res) => {
 // START SERVER
 // --------------------
 const forceSync = (process.env.DB_FORCE_SYNC || 'false').toLowerCase() === 'true';
+const alterSyncRequested = (process.env.DB_ALTER_SYNC || 'false').toLowerCase() === 'true';
+const alterSync = !forceSync && alterSyncRequested;
 
-sequelize.sync({ force: forceSync })
+sequelize.sync({ force: forceSync, alter: alterSync })
   .then(async () => {
     const { runAllSeedersIfEnabled } = require('./app/seed/runAllSeeders');
     const { autoSeedIfEnabled } = require('./app/seed/autoSeed');
