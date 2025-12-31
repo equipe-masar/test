@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { roleHomePath, useAuth } from '../auth/AuthContext.jsx'
 
@@ -14,9 +14,11 @@ export default function LoginPage() {
 
   const from = useMemo(() => location.state?.from?.pathname, [location.state])
 
-  if (!loading && user) {
-    navigate(from || roleHomePath(role), { replace: true })
-  }
+  useEffect(() => {
+    if (!loading && user) {
+      navigate(from || roleHomePath(role), { replace: true })
+    }
+  }, [loading, user, role, from, navigate])
 
   const onSubmit = async (e) => {
     e.preventDefault()
