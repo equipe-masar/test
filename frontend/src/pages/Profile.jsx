@@ -144,7 +144,7 @@ export default function ProfilePage() {
                   id_corge: user?.id_corge ?? '',
                   isActive: (user?.state || '').toLowerCase() === 'active',
                 })
-                setIsEditing((v) => !v)
+                setIsEditing(true)
               }}
             >
               Modifier
@@ -164,57 +164,83 @@ export default function ProfilePage() {
           ) : null}
 
           {isEditing ? (
-            <div style={{ marginTop: 12 }}>
-              <div className="app-kv">
-                <div className="app-k">Matricule</div>
-                <div className="app-v">
-                  <input className="auth-input" value={form.matricule} onChange={onChange('matricule')} />
-                </div>
-
-                <div className="app-k">Corge</div>
-                <div className="app-v">
-                  <select
-                    className="auth-input"
-                    value={form.id_corge}
-                    onChange={onChange('id_corge')}
-                    disabled={corgesLoading}
+            <div
+              className="modal-backdrop"
+              onClick={(e) => {
+                if (e.target === e.currentTarget && !saving) {
+                  setIsEditing(false)
+                  setError('')
+                }
+              }}
+              role="dialog"
+              aria-modal="true"
+            >
+              <div className="modal">
+                <div className="modal-header">
+                  <div className="modal-title">Modifier profil</div>
+                  <button
+                    onClick={() => {
+                      setIsEditing(false)
+                      setError('')
+                    }}
+                    disabled={saving}
+                    aria-label="Close"
                   >
-                    <option value="">-</option>
-                    {corges.map((c) => (
-                      <option key={c.id} value={c.id}>
-                        {c.libelle || c.abrv_libelle || String(c.id)}
-                      </option>
-                    ))}
-                  </select>
-                  {corgesError ? (
-                    <div style={{ marginTop: 6, color: 'var(--app-muted)', fontSize: 12 }}>{corgesError}</div>
-                  ) : null}
+                    ✕
+                  </button>
                 </div>
 
-                <div className="app-k">Statut</div>
-                <div className="app-v" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <input
-                    type="checkbox"
-                    checked={Boolean(form.isActive)}
-                    onChange={(e) => setForm((prev) => ({ ...prev, isActive: e.target.checked }))}
-                  />
-                  <div>{form.isActive ? 'Actif' : 'Inactif'}</div>
-                </div>
-              </div>
+                <div className="app-kv" style={{ marginTop: 0 }}>
+                  <div className="app-k">Matricule</div>
+                  <div className="app-v">
+                    <input className="auth-input" value={form.matricule} onChange={onChange('matricule')} />
+                  </div>
 
-              <div style={{ display: 'flex', gap: 10, marginTop: 10 }}>
-                <button onClick={onSave} disabled={saving}>
-                  {saving ? 'Saving…' : 'Enregistrer'}
-                </button>
-                <button
-                  onClick={() => {
-                    setIsEditing(false)
-                    setError('')
-                  }}
-                  disabled={saving}
-                >
-                  Annuler
-                </button>
+                  <div className="app-k">Corge</div>
+                  <div className="app-v">
+                    <select
+                      className="auth-input"
+                      value={form.id_corge}
+                      onChange={onChange('id_corge')}
+                      disabled={corgesLoading}
+                    >
+                      <option value="">-</option>
+                      {corges.map((c) => (
+                        <option key={c.id} value={c.id}>
+                          {c.libelle || c.abrv_libelle || String(c.id)}
+                        </option>
+                      ))}
+                    </select>
+                    {corgesError ? (
+                      <div style={{ marginTop: 6, color: 'var(--app-muted)', fontSize: 12 }}>{corgesError}</div>
+                    ) : null}
+                  </div>
+
+                  <div className="app-k">Statut</div>
+                  <div className="app-v" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <input
+                      type="checkbox"
+                      checked={Boolean(form.isActive)}
+                      onChange={(e) => setForm((prev) => ({ ...prev, isActive: e.target.checked }))}
+                    />
+                    <div>{form.isActive ? 'Actif' : 'Inactif'}</div>
+                  </div>
+                </div>
+
+                <div className="modal-footer">
+                  <button
+                    onClick={() => {
+                      setIsEditing(false)
+                      setError('')
+                    }}
+                    disabled={saving}
+                  >
+                    Annuler
+                  </button>
+                  <button onClick={onSave} disabled={saving}>
+                    {saving ? 'Saving…' : 'Enregistrer'}
+                  </button>
+                </div>
               </div>
             </div>
           ) : null}
