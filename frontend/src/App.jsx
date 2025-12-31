@@ -1,35 +1,37 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Navigate, Route, Routes } from 'react-router-dom'
+import { roleHomePath, useAuth } from './auth/AuthContext.jsx'
+import RequireAuth from './routes/RequireAuth.jsx'
+import LoginPage from './pages/Login.jsx'
+import AdminPage from './pages/Admin.jsx'
+import OperateurPage from './pages/Operateur.jsx'
+import ValidateurPage from './pages/Validateur.jsx'
 
-function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+function HomeRedirect() {
+  const { loading, user, role } = useAuth()
+  if (loading) return <div>Loading…</div>
+  if (!user) return <Navigate to="/login" replace />
+  return <Navigate to={roleHomePath(role)} replace />
 }
 
-export default App
+export default function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<HomeRedirect />} />
+      <Route path="/login" element={<LoginPage />} />
+
+      <Route element={<RequireAuth requiredRole="administrateur" />}>
+        <Route path="/administrateur" element={<AdminPage />} />
+      </Route>
+
+      <Route element={<RequireAuth requiredRole="operateur" />}>
+        <Route path="/operateur" element={<OperateurPage />} />
+      </Route>
+
+      <Route element={<RequireAuth requiredRole="validateur" />}>
+        <Route path="/validateur" element={<ValidateurPage />} />
+      </Route>
+
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
+  )
+}

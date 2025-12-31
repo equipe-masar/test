@@ -6,6 +6,7 @@ const UserRole = require("../models/UserRole.model");
 exports.assignRoleToUser = async (req, res) => {
   try {
     const { id_user, id_role } = req.body;
+    if (!id_user || !id_role) return res.status(400).json({ message: "id_user and id_role are required" });
     await UserRole.create({ id_user, id_role });
     res.status(201).json({ message: "Role assigned to user" });
   } catch (err) {
@@ -27,12 +28,9 @@ exports.removeRoleFromUser = async (req, res) => {
 // Get all roles of a user
 exports.getUserRoles = async (req, res) => {
   try {
-    const user = await User.findByPk(req.params.userId, {
-      include: { model: Role, as: "roles" }
-    });
-
-    if (!user) return res.sendStatus(404);
-    res.json(user);
+    const username = req.params.userId;
+    const links = await UserRole.findAll({ where: { id_user: username } });
+    res.json({ success: true, id_user: username, roles: links.map(l => l.id_role).filter(Boolean) });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
