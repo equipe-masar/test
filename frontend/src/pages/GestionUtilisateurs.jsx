@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext.jsx'
+import AdminNavbar from '../components/AdminNavbar.jsx'
 
 export default function GestionUtilisateurs() {
   const { user, role } = useAuth()
@@ -192,20 +193,7 @@ export default function GestionUtilisateurs() {
   return (
     <div className="app-page">
       {/* NAVBAR */}
-      <div className="app-nav">
-        <div className="app-navLeft">
-          <div className="app-navTitle">GRH</div>
-           <div className="app-v">{role || '-'}</div>
-
-          <nav className="app-navLinks">
-            <Link to="/administrateur/utilisateurs">Gestion Utilisateurs        </Link>
-            <Link to="/administrateur/corges">Gestion Corges</Link>
-          </nav>
-        </div>
-
-        <button onClick={() => navigate('/logout')}>Logout</button>
-       
-      </div>
+      <AdminNavbar />
 
       {/* CONTENU PAGE */}
       <div className="app-container">

@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { Modal, Button, Form, Table } from "react-bootstrap";
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext.jsx';
+import AdminNavbar from '../components/AdminNavbar.jsx';
 
 export default function GestionCorge() {
   const { user, role } = useAuth();
@@ -203,31 +204,28 @@ export default function GestionCorge() {
     return value;
   };
 
+  const formatDateTime = (value) => {
+    if (!value) return '-';
+    const d = new Date(value);
+    if (Number.isNaN(d.getTime())) return value;
+    return d.toLocaleString('fr-FR');
+  };
+
   return (
     <div className="app-page">
       {/* NAVBAR */}
-      <div className="app-nav">
-        <div className="app-navLeft">
-          <div className="app-navTitle">GRH</div>
-          <div className="app-navTag">ADMIN</div>
-
-          {/* Liens Navbar */}
-          <nav className="app-navLinks">
-            <Link to="/administrateur">Dashboard</Link>
-            <Link to="/administrateur/corges">Gestion Corges</Link>
-          </nav>
-        </div>
-
-        <button onClick={() => navigate('/logout')}>Logout</button>
-      </div>
+      <AdminNavbar />
 
       {/* CONTENU PAGE */}
       <div className="app-container">
         <div className="app-card">
-          <h2>Gestion de Corges</h2>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+            <h2 style={{ margin: 0 }}>Gestion des Corges</h2>
+            <span style={{ fontSize: '0.9rem', opacity: 0.8 }}>Total : {corges.length}</span>
+          </div>
 
           <Button variant="primary" className="mb-3" onClick={openAddModal}>
-            Ajouter un Corge
+            Ajouter un corge
           </Button>
 
           <Table striped bordered hover>
@@ -258,8 +256,8 @@ export default function GestionCorge() {
                     <td>{getDisplayValue('id_brigade', corge.id_brigade)}</td>
                     <td>{getDisplayValue('id_region', corge.id_region)}</td>
                     <td>{getDisplayValue('id_corge_soutient', corge.id_corge_soutient)}</td>
-                    <td>{corge.createdAt}</td>
-                    <td>{corge.updatedAt}</td>
+                    <td>{formatDateTime(corge.createdAt)}</td>
+                    <td>{formatDateTime(corge.updatedAt)}</td>
                     <td>
                       <Button
                         variant="warning"

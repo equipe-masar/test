@@ -1,5 +1,6 @@
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext.jsx'
+import AdminNavbar from '../components/AdminNavbar.jsx'
 
 export default function AdminPage() {
   const { user, role } = useAuth()
@@ -8,30 +9,7 @@ export default function AdminPage() {
   return (
     <div className="app-page">
       {/* NAVBAR */}
-      <div className="app-nav">
-        <div className="app-navLeft">
-          <div className="app-navTitle">GRH</div>
-          <div className="app-navTag">ADMIN</div>
-
-          {/* Liens Navbar */}
-          <nav className="app-navLinks">
-            <Link to="/administrateur/utilisateurs">Gestion Utilisateurs     </Link>
-            <Link to="/administrateur/corges">Gestion Corges</Link>
-          </nav>
-        </div>
-
-        <div className="app-navActions">
-          <Link
-            to="/profile"
-            className="app-circleBtn"
-            title="Profile"
-            aria-label="Profile"
-          >
-            {(user?.username || 'P')[0].toUpperCase()}
-          </Link>
-          <button onClick={() => navigate('/logout')}>Logout</button>
-        </div>
-      </div>
+      <AdminNavbar />
 
       {/* CONTENU PAGE */}
       <div className="app-container">
