@@ -13,9 +13,10 @@ export default function LogoutPage() {
         await logout()
       } finally {
         setDone(true)
+        navigate('/login', { replace: true })
       }
     })()
-  }, [logout])
+  }, [logout, navigate])
 
   return (
     <div className="auth-shell">
@@ -26,13 +27,10 @@ export default function LogoutPage() {
         </div>
 
         <h2 className="auth-title">Déconnexion</h2>
-        <div className="auth-subtitle">{done ? 'Vous êtes déconnecté.' : 'Déconnexion…'}</div>
+        <div className="auth-subtitle">{done ? 'Vous êtes déconnecté. Redirection…' : 'Déconnexion…'}</div>
 
         <div className="auth-actions">
-          <button className="auth-primaryBtn" onClick={() => navigate('/login', { replace: true })}>
-            Aller au login
-          </button>
-          <Link to="/login">Retour</Link>
+          <Link to="/login">Aller au login</Link>
         </div>
       </div>
     </div>
