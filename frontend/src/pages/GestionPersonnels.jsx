@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import RecruteNavbar from '../components/RecruteNavbar.jsx'
+import ajoutIcon from '../assets/ajout.png'
 
 async function apiJson(path, { method = 'GET', body } = {}) {
   const res = await fetch(path, {
@@ -49,6 +50,12 @@ export default function GestionPersonnelsPage() {
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
+
+  const [hoveredButton, setHoveredButton] = useState(null)
+
+  const [search, setSearch] = useState('')
+
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   const [personnels, setPersonnels] = useState([])
   const [loadingList, setLoadingList] = useState(false)
@@ -152,233 +159,42 @@ export default function GestionPersonnelsPage() {
     }
   }
 
+  const openModal = () => {
+    setError('')
+    setSuccess('')
+    setForm(initialForm)
+    setIdGouvernement('')
+    setIsModalOpen(true)
+  }
+
+  const closeModal = () => {
+    setIsModalOpen(false)
+  }
+
+  const normalizedSearch = search.trim().toLowerCase()
+  const filteredPersonnels = normalizedSearch
+    ? personnels.filter((p) => {
+        return [p?.id, p?.matrecule, p?.nom, p?.prenom, p?.ncin, p?.dtnai, p?.tel].some((v) =>
+          String(v ?? '').toLowerCase().includes(normalizedSearch)
+        )
+      })
+    : personnels
+
   return (
     <div className="app-page">
       <RecruteNavbar />
 
       <div className="app-container">
         <div className="app-card">
-          <h2 style={{ marginTop: 0 }}>Gestion Personnels</h2>
-
-          <form onSubmit={onSubmit} className="app-form" style={{ display: 'grid', gap: '12px', maxWidth: '720px' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-              <div>
-                <label className="auth-label">Matricule *</label>
-                <input className="auth-input" name="matrecule" value={form.matrecule} onChange={onChange} type="text" />
-              </div>
-
-              <div>
-                <label className="auth-label">NCIN *</label>
-                <input className="auth-input" name="ncin" value={form.ncin} onChange={onChange} type="text" />
-              </div>
-            </div>
-
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-              <div>
-                <label className="auth-label">Nom *</label>
-                <input className="auth-input" name="nom" value={form.nom} onChange={onChange} type="text" />
-              </div>
-
-              <div>
-                <label className="auth-label">Prénom *</label>
-                <input className="auth-input" name="prenom" value={form.prenom} onChange={onChange} type="text" />
-              </div>
-            </div>
-
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-              <div>
-                <label className="auth-label">Date de naissance *</label>
-                <input className="auth-input" name="dtnai" value={form.dtnai} onChange={onChange} type="date" />
-              </div>
-
-              <div>
-                <label className="auth-label">Date CIN</label>
-                <input className="auth-input" name="dtcin" value={form.dtcin} onChange={onChange} type="date" />
-              </div>
-            </div>
-
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-              <div>
-                <label className="auth-label">IU</label>
-                <input className="auth-input" name="iu" value={form.iu} onChange={onChange} type="text" />
-              </div>
-
-              <div>
-                <label className="auth-label">Téléphone (8 chiffres)</label>
-                <input className="auth-input" name="tel" value={form.tel} onChange={onChange} type="text" maxLength={8} />
-              </div>
-            </div>
-
-            <div>
-              <label className="auth-label">Adresse</label>
-              <input className="auth-input" name="adress" value={form.adress} onChange={onChange} type="text" />
-            </div>
-
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px' }}>
-              <div>
-                <label className="auth-label">Prénom père</label>
-                <input className="auth-input" name="ppere" value={form.ppere} onChange={onChange} type="text" />
-              </div>
-              <div>
-                <label className="auth-label">Prénom grand-père</label>
-                <input className="auth-input" name="pgpere" value={form.pgpere} onChange={onChange} type="text" />
-              </div>
-              <div>
-                <label className="auth-label">Prénom mère</label>
-                <input className="auth-input" name="pmere" value={form.pmere} onChange={onChange} type="text" />
-              </div>
-            </div>
-
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-              <div>
-                <label className="auth-label">Date enrôlement</label>
-                <input className="auth-input" name="dtenrolement" value={form.dtenrolement} onChange={onChange} type="date" />
-              </div>
-              <div>
-                <label className="auth-label">Réf. enrôlement</label>
-                <input className="auth-input" name="refenrolement" value={form.refenrolement} onChange={onChange} type="text" />
-              </div>
-            </div>
-
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-              <div>
-                <label className="auth-label">Date détachement</label>
-                <input className="auth-input" name="dtdetachement" value={form.dtdetachement} onChange={onChange} type="date" />
-              </div>
-              <div>
-                <label className="auth-label">Réf. détachement</label>
-                <input className="auth-input" name="refdetachement" value={form.refdetachement} onChange={onChange} type="text" />
-              </div>
-            </div>
-
-            {refsError ? (
-              <div className="auth-alert">
-                <div className="auth-alertTitle">Erreur</div>
-                <div>{refsError}</div>
-              </div>
-            ) : null}
-
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-              <div>
-                <label className="auth-label">Gouvernement</label>
-                <select
-                  className="auth-input"
-                  value={idGouvernement}
-                  onChange={(e) => setIdGouvernement(e.target.value)}
-                  disabled={loadingRefs}
-                >
-                  <option value="">-- Choisir --</option>
-                  {gouvernements.map((g) => (
-                    <option key={g.id} value={String(g.id)}>
-                      {g.libelle}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="auth-label">Délégation</label>
-                <select
-                  className="auth-input"
-                  name="id_delegation"
-                  value={form.id_delegation}
-                  onChange={onChange}
-                  disabled={loadingRefs || !idGouvernement}
-                >
-                  <option value="">-- Choisir --</option>
-                  {delegations
-                    .filter((d) => {
-                      if (!idGouvernement) return false
-                      const govIdNum = Number(idGouvernement)
-                      return (
-                        Number(d?.id_gouvernement) === govIdNum ||
-                        Number(d?.id_gouv) === govIdNum ||
-                        Number(d?.gouvernement?.id) === govIdNum
-                      )
-                    })
-                    .map((d) => (
-                      <option key={d.id} value={String(d.id)}>
-                        {d.libelle}
-                      </option>
-                    ))}
-                </select>
-              </div>
-            </div>
-
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-              <div>
-                <label className="auth-label">Recrutement</label>
-                <select
-                  className="auth-input"
-                  name="id_recrutement"
-                  value={form.id_recrutement}
-                  onChange={onChange}
-                  disabled={loadingRefs}
-                >
-                  <option value="">-- Choisir --</option>
-                  {recrutements.map((r) => (
-                    <option key={r.id} value={String(r.id)}>
-                      {r.libelle}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="auth-label">Origine recrutement</label>
-                <select
-                  className="auth-input"
-                  name="id_origine_recrutement"
-                  value={form.id_origine_recrutement}
-                  onChange={onChange}
-                  disabled={loadingRefs}
-                >
-                  <option value="">-- Choisir --</option>
-                  {originesRecrutement.map((o) => (
-                    <option key={o.id} value={String(o.id)}>
-                      {o.libelle}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            <div>
-              <label className="auth-label">Niveau scolaire</label>
-              <select
-                className="auth-input"
-                name="id_niveau_scolaire"
-                value={form.id_niveau_scolaire}
-                onChange={onChange}
-                disabled={loadingRefs}
-              >
-                <option value="">-- Choisir --</option>
-                {niveauxScolaires.map((n) => (
-                  <option key={n.id} value={String(n.id)}>
-                    {n.libelle}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {error ? (
-              <div className="auth-alert">
-                <div className="auth-alertTitle">Erreur</div>
-                <div>{error}</div>
-              </div>
-            ) : null}
-
-            {success ? (
-              <div className="auth-alert">
-                <div className="auth-alertTitle">Succès</div>
-                <div>{success}</div>
-              </div>
-            ) : null}
-
-            <button type="submit" className="auth-primaryBtn" style={{ marginTop: '8px', width: 'fit-content' }} disabled={submitting}>
-              {submitting ? 'Enregistrement…' : 'Enregistrer'}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
+            <h2 style={{ marginTop: 0, marginBottom: 0 }}>Gestion Personnels</h2>
+            <button type="button" className="auth-primaryBtn" style={{ width: 'fit-content', padding: '8px 12px' }} onClick={openModal}>
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                <img src={ajoutIcon} alt="Ajouter" style={{ width: '18px', height: '18px' }} />
+                <span>Ajouter</span>
+              </span>
             </button>
-          </form>
+          </div>
 
           <div style={{ marginTop: '18px' }}>
             <div style={{ display: 'flex', gap: '10px', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -392,6 +208,17 @@ export default function GestionPersonnelsPage() {
               >
                 {loadingList ? 'Chargement…' : 'Rafraîchir'}
               </button>
+            </div>
+
+            <div style={{ marginTop: '10px', maxWidth: '360px' }}>
+              <label className="auth-label">Rechercher</label>
+              <input
+                className="auth-input"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                type="text"
+                placeholder="Rechercher..."
+              />
             </div>
 
             {listError ? (
@@ -420,14 +247,14 @@ export default function GestionPersonnelsPage() {
                       Chargement…
                     </td>
                   </tr>
-                ) : personnels.length === 0 ? (
+                ) : filteredPersonnels.length === 0 ? (
                   <tr>
                     <td colSpan={7} style={{ padding: '12px 10px' }}>
                       Aucun personnel.
                     </td>
                   </tr>
                 ) : (
-                  personnels.map((p) => (
+                  filteredPersonnels.map((p) => (
                     <tr key={p.id}>
                       <td>{p.id}</td>
                       <td>{p.matrecule || '-'}</td>
@@ -444,6 +271,266 @@ export default function GestionPersonnelsPage() {
           </div>
         </div>
       </div>
+
+      {isModalOpen && (
+        <div className="modal-backdrop" onClick={closeModal}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <div className="modal-title">Nouveau personnel</div>
+              <button type="button" onClick={closeModal}>
+                &times;
+              </button>
+            </div>
+
+            <form onSubmit={onSubmit} className="app-form" style={{ display: 'grid', gap: '12px', maxWidth: '720px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                <div>
+                  <label className="auth-label">Matricule *</label>
+                  <input className="auth-input" name="matrecule" value={form.matrecule} onChange={onChange} type="text" />
+                </div>
+
+                <div>
+                  <label className="auth-label">NCIN *</label>
+                  <input className="auth-input" name="ncin" value={form.ncin} onChange={onChange} type="text" />
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                <div>
+                  <label className="auth-label">Nom *</label>
+                  <input className="auth-input" name="nom" value={form.nom} onChange={onChange} type="text" />
+                </div>
+
+                <div>
+                  <label className="auth-label">Prénom *</label>
+                  <input className="auth-input" name="prenom" value={form.prenom} onChange={onChange} type="text" />
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                <div>
+                  <label className="auth-label">Date de naissance *</label>
+                  <input className="auth-input" name="dtnai" value={form.dtnai} onChange={onChange} type="date" />
+                </div>
+
+                <div>
+                  <label className="auth-label">Date CIN</label>
+                  <input className="auth-input" name="dtcin" value={form.dtcin} onChange={onChange} type="date" />
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                <div>
+                  <label className="auth-label">IU</label>
+                  <input className="auth-input" name="iu" value={form.iu} onChange={onChange} type="text" />
+                </div>
+
+                <div>
+                  <label className="auth-label">Téléphone (8 chiffres)</label>
+                  <input className="auth-input" name="tel" value={form.tel} onChange={onChange} type="text" maxLength={8} />
+                </div>
+              </div>
+
+              <div>
+                <label className="auth-label">Adresse</label>
+                <input className="auth-input" name="adress" value={form.adress} onChange={onChange} type="text" />
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px' }}>
+                <div>
+                  <label className="auth-label">Prénom père</label>
+                  <input className="auth-input" name="ppere" value={form.ppere} onChange={onChange} type="text" />
+                </div>
+                <div>
+                  <label className="auth-label">Prénom grand-père</label>
+                  <input className="auth-input" name="pgpere" value={form.pgpere} onChange={onChange} type="text" />
+                </div>
+                <div>
+                  <label className="auth-label">Prénom mère</label>
+                  <input className="auth-input" name="pmere" value={form.pmere} onChange={onChange} type="text" />
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                <div>
+                  <label className="auth-label">Date enrôlement</label>
+                  <input className="auth-input" name="dtenrolement" value={form.dtenrolement} onChange={onChange} type="date" />
+                </div>
+                <div>
+                  <label className="auth-label">Réf. enrôlement</label>
+                  <input className="auth-input" name="refenrolement" value={form.refenrolement} onChange={onChange} type="text" />
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                <div>
+                  <label className="auth-label">Date détachement</label>
+                  <input className="auth-input" name="dtdetachement" value={form.dtdetachement} onChange={onChange} type="date" />
+                </div>
+                <div>
+                  <label className="auth-label">Réf. détachement</label>
+                  <input className="auth-input" name="refdetachement" value={form.refdetachement} onChange={onChange} type="text" />
+                </div>
+              </div>
+
+              {refsError ? (
+                <div className="auth-alert">
+                  <div className="auth-alertTitle">Erreur</div>
+                  <div>{refsError}</div>
+                </div>
+              ) : null}
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                <div>
+                  <label className="auth-label">Gouvernement</label>
+                  <select
+                    className="auth-input"
+                    value={idGouvernement}
+                    onChange={(e) => setIdGouvernement(e.target.value)}
+                    disabled={loadingRefs}
+                  >
+                    <option value="">-- Choisir --</option>
+                    {gouvernements.map((g) => (
+                      <option key={g.id} value={String(g.id)}>
+                        {g.libelle}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="auth-label">Délégation</label>
+                  <select
+                    className="auth-input"
+                    name="id_delegation"
+                    value={form.id_delegation}
+                    onChange={onChange}
+                    disabled={loadingRefs || !idGouvernement}
+                  >
+                    <option value="">-- Choisir --</option>
+                    {delegations
+                      .filter((d) => {
+                        if (!idGouvernement) return false
+                        const govIdNum = Number(idGouvernement)
+                        return (
+                          Number(d?.id_gouvernement) === govIdNum ||
+                          Number(d?.id_gouv) === govIdNum ||
+                          Number(d?.gouvernement?.id) === govIdNum
+                        )
+                      })
+                      .map((d) => (
+                        <option key={d.id} value={String(d.id)}>
+                          {d.libelle}
+                        </option>
+                      ))}
+                  </select>
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                <div>
+                  <label className="auth-label">Recrutement</label>
+                  <select
+                    className="auth-input"
+                    name="id_recrutement"
+                    value={form.id_recrutement}
+                    onChange={onChange}
+                    disabled={loadingRefs}
+                  >
+                    <option value="">-- Choisir --</option>
+                    {recrutements.map((r) => (
+                      <option key={r.id} value={String(r.id)}>
+                        {r.libelle}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="auth-label">Origine recrutement</label>
+                  <select
+                    className="auth-input"
+                    name="id_origine_recrutement"
+                    value={form.id_origine_recrutement}
+                    onChange={onChange}
+                    disabled={loadingRefs}
+                  >
+                    <option value="">-- Choisir --</option>
+                    {originesRecrutement.map((o) => (
+                      <option key={o.id} value={String(o.id)}>
+                        {o.libelle}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="auth-label">Niveau scolaire</label>
+                <select
+                  className="auth-input"
+                  name="id_niveau_scolaire"
+                  value={form.id_niveau_scolaire}
+                  onChange={onChange}
+                  disabled={loadingRefs}
+                >
+                  <option value="">-- Choisir --</option>
+                  {niveauxScolaires.map((n) => (
+                    <option key={n.id} value={String(n.id)}>
+                      {n.libelle}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {error ? (
+                <div className="auth-alert">
+                  <div className="auth-alertTitle">Erreur</div>
+                  <div>{error}</div>
+                </div>
+              ) : null}
+
+              {success ? (
+                <div className="auth-alert">
+                  <div className="auth-alertTitle">Succès</div>
+                  <div>{success}</div>
+                </div>
+              ) : null}
+
+              <div className="modal-footer" style={{ flexDirection: 'column', gap: '10px' }}>
+                <button
+                  type="submit"
+                  className="auth-primaryBtn"
+                  disabled={submitting}
+                  onMouseEnter={() => setHoveredButton('submit')}
+                  onMouseLeave={() => setHoveredButton(null)}
+                  style={{
+                    backgroundColor: hoveredButton === 'submit' ? '#005fa3' : '#0066cc',
+                    transition: 'background-color 0.3s ease',
+                  }}
+                >
+                  {submitting ? 'Enregistrement…' : 'Enregistrer'}
+                </button>
+                <button
+                  type="button"
+                  onClick={closeModal}
+                  disabled={submitting}
+                  onMouseEnter={() => setHoveredButton('cancel')}
+                  onMouseLeave={() => setHoveredButton(null)}
+                  style={{
+                    backgroundColor: hoveredButton === 'cancel' ? '#e0e0e0' : '#f0f0f0',
+                    transition: 'background-color 0.3s ease',
+                    border: '1px solid #ccc',
+                    cursor: 'pointer',
+                  }}
+                >
+                  Annuler
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

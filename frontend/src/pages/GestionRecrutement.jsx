@@ -29,6 +29,8 @@ export default function GestionRecrutementPage() {
     abrv_libelle: '',
   })
 
+  const [search, setSearch] = useState('')
+
   const [hoveredButton, setHoveredButton] = useState(null)
 
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -126,6 +128,13 @@ export default function GestionRecrutementPage() {
     }
   }
 
+  const normalizedSearch = search.trim().toLowerCase()
+  const filteredItems = normalizedSearch
+    ? items.filter((r) => {
+        return [r?.id, r?.libelle, r?.abrv_libelle].some((v) => String(v ?? '').toLowerCase().includes(normalizedSearch))
+      })
+    : items
+
   return (
     <div className="app-page">
       <AdminNavbar />
@@ -170,6 +179,17 @@ export default function GestionRecrutementPage() {
               </button>
             </div>
 
+            <div style={{ marginTop: '10px', maxWidth: '360px' }}>
+              <label className="auth-label">Rechercher</label>
+              <input
+                className="auth-input"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                type="text"
+                placeholder="Rechercher..."
+              />
+            </div>
+
             {listError ? (
               <div className="auth-alert" style={{ marginTop: '12px' }}>
                 <div className="auth-alertTitle">Erreur</div>
@@ -193,14 +213,14 @@ export default function GestionRecrutementPage() {
                       Chargement…
                     </td>
                   </tr>
-                ) : items.length === 0 ? (
+                ) : filteredItems.length === 0 ? (
                   <tr>
                     <td colSpan={4} style={{ padding: '12px 10px' }}>
                       Aucun enregistrement.
                     </td>
                   </tr>
                 ) : (
-                  items.map((r) => (
+                  filteredItems.map((r) => (
                     <tr key={r.id}>
                       <td>{r.id}</td>
                       <td>{r.libelle}</td>
