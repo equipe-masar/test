@@ -211,30 +211,6 @@ export default function GestionCorge() {
               </tr>
             </thead>
             <tbody>
-              {filteredCorges.map((c) => (
-                <tr key={c.id}>
-                  <td><strong>{c.libelle}</strong></td>
-                  <td>{getLabel(armees, c.id_arme)}</td>
-                  <td>{getLabel(garnizons, c.id_garnizon)}</td>
-                  <td>
-                    <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                      <button
-                        type="button"
-                        onClick={() => openEditModal(c)}
-                        title="Modifier"
-                        style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 0 }}
-                      >
-                        <img src={modifIcon} alt="Modifier" width={20} height={20} />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handleDelete(c.id)}
-                        title="Supprimer"
-                        style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 0 }}
-                      >
-                        <img src={suppIcon} alt="Supprimer" width={20} height={20} />
-                      </button>
-                    </div>
               {loading ? (
                 <tr>
                   <td colSpan={4} style={{ padding: '12px 10px' }}>
