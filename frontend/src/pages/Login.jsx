@@ -12,6 +12,12 @@ export default function LoginPage() {
   const [error, setError] = useState('')
   const [submitting, setSubmitting] = useState(false)
 
+  useEffect(() => {
+    if (location.state?.message) {
+      setError(location.state.message)
+    }
+  }, [location.state?.message])
+
   const from = useMemo(() => location.state?.from?.pathname, [location.state])
 
   useEffect(() => {
@@ -30,6 +36,10 @@ export default function LoginPage() {
     } catch (err) {
       if (err?.status === 403) {
         setError("Votre compte est inactif, veuillez contacter l'administrateur.")
+      } else if (err?.status === 429) {
+        setError(err?.message || 'Compte temporairement bloqué, réessayez plus tard.')
+      } else if (err?.status === 409) {
+        setError(err?.message || 'Utilisateur déjà connecté ailleurs.')
       } else {
         setError(err?.message || 'Login failed')
       }
