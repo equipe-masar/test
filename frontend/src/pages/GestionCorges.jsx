@@ -22,6 +22,7 @@ export default function GestionCorge() {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const [hoveredButton, setHoveredButton] = useState(null);
+  const [search, setSearch] = useState("");
 
   // Listes de données pour les menus déroulants
   const [armees, setArmees] = useState([]);
@@ -160,6 +161,17 @@ export default function GestionCorge() {
   // Helper pour afficher les noms au lieu des IDs dans le tableau
   const getLabel = (list, id) => list.find(item => item.id == id)?.libelle || "-";
 
+  const normalizedSearch = search.trim().toLowerCase();
+  const filteredCorges = normalizedSearch
+    ? corges.filter((c) => {
+        const armeeLabel = getLabel(armees, c.id_arme);
+        const garnizonLabel = getLabel(garnizons, c.id_garnizon);
+        return [c?.libelle, c?.abrv_libelle, armeeLabel, garnizonLabel].some((v) =>
+          String(v ?? "").toLowerCase().includes(normalizedSearch)
+        );
+      })
+    : corges;
+
   return (
     <div className="app-page">
       <AdminNavbar />
@@ -178,6 +190,17 @@ export default function GestionCorge() {
 
           {loading && <p>Chargement...</p>}
 
+          <div style={{ marginBottom: '12px', maxWidth: '360px' }}>
+            <label className="auth-label">Rechercher</label>
+            <input
+              className="auth-input"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              type="text"
+              placeholder="Rechercher..."
+            />
+          </div>
+
           <table className="app-table">
             <thead>
               <tr>
@@ -188,7 +211,7 @@ export default function GestionCorge() {
               </tr>
             </thead>
             <tbody>
-              {corges.map((c) => (
+              {filteredCorges.map((c) => (
                 <tr key={c.id}>
                   <td><strong>{c.libelle}</strong></td>
                   <td>{getLabel(armees, c.id_arme)}</td>

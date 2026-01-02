@@ -50,6 +50,8 @@ export default function GestionPersonnelsPage() {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
 
+  const [search, setSearch] = useState('')
+
   const [personnels, setPersonnels] = useState([])
   const [loadingList, setLoadingList] = useState(false)
   const [listError, setListError] = useState('')
@@ -151,6 +153,15 @@ export default function GestionPersonnelsPage() {
       setSubmitting(false)
     }
   }
+
+  const normalizedSearch = search.trim().toLowerCase()
+  const filteredPersonnels = normalizedSearch
+    ? personnels.filter((p) => {
+        return [p?.id, p?.matrecule, p?.nom, p?.prenom, p?.ncin, p?.dtnai, p?.tel].some((v) =>
+          String(v ?? '').toLowerCase().includes(normalizedSearch)
+        )
+      })
+    : personnels
 
   return (
     <div className="app-page">
@@ -394,6 +405,17 @@ export default function GestionPersonnelsPage() {
               </button>
             </div>
 
+            <div style={{ marginTop: '10px', maxWidth: '360px' }}>
+              <label className="auth-label">Rechercher</label>
+              <input
+                className="auth-input"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                type="text"
+                placeholder="Rechercher..."
+              />
+            </div>
+
             {listError ? (
               <div className="auth-alert" style={{ marginTop: '12px' }}>
                 <div className="auth-alertTitle">Erreur</div>
@@ -420,14 +442,14 @@ export default function GestionPersonnelsPage() {
                       Chargement…
                     </td>
                   </tr>
-                ) : personnels.length === 0 ? (
+                ) : filteredPersonnels.length === 0 ? (
                   <tr>
                     <td colSpan={7} style={{ padding: '12px 10px' }}>
                       Aucun personnel.
                     </td>
                   </tr>
                 ) : (
-                  personnels.map((p) => (
+                  filteredPersonnels.map((p) => (
                     <tr key={p.id}>
                       <td>{p.id}</td>
                       <td>{p.matrecule || '-'}</td>

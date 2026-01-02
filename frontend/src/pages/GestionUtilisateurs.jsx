@@ -23,6 +23,7 @@ export default function GestionUtilisateurs() {
   const [editingOriginalUsername, setEditingOriginalUsername] = useState(null)
   const [roles, setRoles] = useState([])
   const [corges, setCorges] = useState([])
+  const [search, setSearch] = useState('')
   const [form, setForm] = useState({
     username: '',
     matricule: '',
@@ -232,6 +233,17 @@ export default function GestionUtilisateurs() {
     }
   }
 
+  const normalizedSearch = search.trim().toLowerCase()
+  const nonAdminUsers = users.filter((u) => u.userRole !== 'administrateur')
+  const filteredUsers = normalizedSearch
+    ? nonAdminUsers.filter((u) => {
+        const corgeLabel = corges.find((c) => c.id === u.id_corge)?.libelle || ''
+        return [u?.username, u?.matricule, corgeLabel, u?.userRole, u?.state].some((v) =>
+          String(v ?? '').toLowerCase().includes(normalizedSearch)
+        )
+      })
+    : nonAdminUsers
+
   return (
     <div className="app-page">
       <AdminNavbar />
@@ -274,6 +286,19 @@ export default function GestionUtilisateurs() {
           {error && !loading && <p style={{ color: 'red' }}>{error}</p>}
 
           {!loading && !error && (
+            <div style={{ marginBottom: '12px', maxWidth: '360px' }}>
+              <label className="auth-label">Rechercher</label>
+              <input
+                className="auth-input"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                type="text"
+                placeholder="Rechercher..."
+              />
+            </div>
+          )}
+
+          {!loading && !error && (
             <table className="app-table">
               <thead>
                 <tr>
@@ -286,16 +311,14 @@ export default function GestionUtilisateurs() {
                 </tr>
               </thead>
               <tbody>
-                {users.filter((u) => u.userRole !== 'administrateur').length === 0 ? (
+                {filteredUsers.length === 0 ? (
                   <tr>
                     <td colSpan={6} style={{ textAlign: 'center' }}>
                       Aucun utilisateur trouvé.
                     </td>
                   </tr>
                 ) : (
-                  users
-                    .filter((u) => u.userRole !== 'administrateur')
-                    .map((u) => (
+                  filteredUsers.map((u) => (
                     <tr key={u.username}>
                       <td>{u.username}</td>
                       <td>{u.matricule || '-'}</td>

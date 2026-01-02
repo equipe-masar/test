@@ -25,6 +25,7 @@ async function apiJson(path, { method = 'GET', body } = {}) {
 
 export default function GestionOrigineRecrutementPage() {
   const [libelle, setLibelle] = useState('')
+  const [search, setSearch] = useState('')
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingId, setEditingId] = useState(null)
   const [items, setItems] = useState([])
@@ -109,6 +110,13 @@ export default function GestionOrigineRecrutementPage() {
     }
   }
 
+  const normalizedSearch = search.trim().toLowerCase()
+  const filteredItems = normalizedSearch
+    ? items.filter((o) => {
+        return [o?.id, o?.libelle].some((v) => String(v ?? '').toLowerCase().includes(normalizedSearch))
+      })
+    : items
+
   return (
     <div className="app-page">
       <AdminNavbar />
@@ -154,6 +162,17 @@ export default function GestionOrigineRecrutementPage() {
               </button>
             </div>
 
+            <div style={{ marginTop: '10px', maxWidth: '360px' }}>
+              <label className="auth-label">Rechercher</label>
+              <input
+                className="auth-input"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                type="text"
+                placeholder="Rechercher..."
+              />
+            </div>
+
             {listError ? (
               <div className="auth-alert" style={{ marginTop: '12px' }}>
                 <div className="auth-alertTitle">Erreur</div>
@@ -176,14 +195,14 @@ export default function GestionOrigineRecrutementPage() {
                       Chargement…
                     </td>
                   </tr>
-                ) : items.length === 0 ? (
+                ) : filteredItems.length === 0 ? (
                   <tr>
                     <td colSpan={3} style={{ padding: '12px 10px' }}>
                       Aucun enregistrement.
                     </td>
                   </tr>
                 ) : (
-                  items.map((o) => (
+                  filteredItems.map((o) => (
                     <tr key={o.id}>
                       <td>{o.id}</td>
                       <td>{o.libelle}</td>
