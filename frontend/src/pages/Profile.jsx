@@ -42,6 +42,8 @@ export default function ProfilePage() {
   const [corgesLoading, setCorgesLoading] = useState(false)
   const [corgesError, setCorgesError] = useState('')
 
+  const canEdit = false
+
   const [form, setForm] = useState({
     matricule: user?.matricule || '',
     id_corge: user?.id_corge ?? '',
@@ -88,6 +90,7 @@ export default function ProfilePage() {
   }
 
   const onSave = async () => {
+    if (!canEdit) return
     if (!user?.username) return
 
     setSaving(true)
@@ -142,19 +145,22 @@ export default function ProfilePage() {
         <div className="app-card">
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10 }}>
             <h2 style={{ marginTop: 0, marginBottom: 0 }}>Profil</h2>
-            <button
-              onClick={() => {
-                setError('')
-                setForm({
-                  matricule: user?.matricule || '',
-                  id_corge: user?.id_corge ?? '',
-                  isActive: (user?.state || '').toLowerCase() === 'active',
-                })
-                setIsEditing(true)
-              }}
-            >
-              Modifier
-            </button>
+            {canEdit ? (
+              <button
+                onClick={() => {
+                  if (!canEdit) return
+                  setError('')
+                  setForm({
+                    matricule: user?.matricule || '',
+                    id_corge: user?.id_corge ?? '',
+                    isActive: (user?.state || '').toLowerCase() === 'active',
+                  })
+                  setIsEditing(true)
+                }}
+              >
+                Modifier
+              </button>
+            ) : null}
           </div>
 
           <div className="app-kv">
@@ -169,7 +175,7 @@ export default function ProfilePage() {
             </div>
           ) : null}
 
-          {isEditing ? (
+          {canEdit && isEditing ? (
             <div
               className="modal-backdrop"
               onClick={(e) => {
