@@ -4,4 +4,4 @@ Touati Khouloud :
 - apres 5 tentative de login fausse il soit bloqué pendant 5 minutes 
 
 Saidi : 
-- Liste personnes dans la partie op
+- Liste personnes dans la partie opérateur
