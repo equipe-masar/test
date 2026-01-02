@@ -35,6 +35,7 @@ export default function ProfilePage() {
 
   const [isEditing, setIsEditing] = useState(false)
   const [saving, setSaving] = useState(false)
+    const [hoveredButton, setHoveredButton] = useState(null)
   const [error, setError] = useState('')
 
   const [corges, setCorges] = useState([])
@@ -122,66 +123,17 @@ export default function ProfilePage() {
           <div className="app-navTitle">GRH</div>
           <div className="app-navTag">PROFILE</div>
 
-          <nav 
-            className="app-navLinks"
-            style={{
-              display: 'flex',
-              gap: '10px',
-              padding: '10px',
-              background: '#f4f4f4',
-            }}
-          >
-            <Link to="/">
-              <button
-                style={{
-                  width: 'auto',
-                  padding: '8px 16px',
-                  backgroundColor: '#34495e',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '4px',
-                  cursor: 'pointer',
-                  fontWeight: '500',
-                  transition: 'all 0.3s ease'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = '#2c3e50';
-                  e.currentTarget.style.transform = 'scale(1.05)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = '#34495e';
-                  e.currentTarget.style.transform = 'scale(1)';
-                }}
-              >
-                Home
-              </button>
+          <nav className="app-navLinks">
+            <Link className="app-navLink" to="/">
+              Home
             </Link>
           </nav>
         </div>
 
-        <div style={{ display: 'flex', gap: 10 }}>
-          <button
-            onClick={() => navigate('/logout')}
-            style={{
-              padding: '8px 16px',
-              borderRadius: '8px',
-              border: 'none',
-              backgroundColor: '#34495e',
-              color: 'white',
-              fontWeight: '500',
-              cursor: 'pointer',
-              transition: 'all 0.3s ease',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = '#2c3e50';
-              e.currentTarget.style.transform = 'scale(1.05)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = '#34495e';
-              e.currentTarget.style.transform = 'scale(1)';
-            }}
-          >
-            Logout
+        <div className="app-navActions">
+          <button type="button" className="app-navActionBtn" onClick={() => navigate('/logout')}>
+            <span aria-hidden="true">🚪</span>
+            <span>Logout</span>
           </button>
         </div>
       </div>
@@ -281,18 +233,36 @@ export default function ProfilePage() {
                   </div>
                 </div>
 
-                <div className="modal-footer">
+                <div className="modal-footer" style={{ flexDirection: 'column', gap: '10px' }}>
+                  <button
+                    className="auth-primaryBtn"
+                    onClick={onSave}
+                    disabled={saving}
+                    onMouseEnter={() => setHoveredButton('submit')}
+                    onMouseLeave={() => setHoveredButton(null)}
+                    style={{
+                      backgroundColor: hoveredButton === 'submit' ? '#005fa3' : '#0066cc',
+                      transition: 'background-color 0.3s ease',
+                    }}
+                  >
+                    {saving ? 'Saving…' : 'Enregistrer'}
+                  </button>
                   <button
                     onClick={() => {
                       setIsEditing(false)
                       setError('')
                     }}
                     disabled={saving}
+                    onMouseEnter={() => setHoveredButton('cancel')}
+                    onMouseLeave={() => setHoveredButton(null)}
+                    style={{
+                      backgroundColor: hoveredButton === 'cancel' ? '#e0e0e0' : '#f0f0f0',
+                      transition: 'background-color 0.3s ease',
+                      border: '1px solid #ccc',
+                      cursor: 'pointer',
+                    }}
                   >
                     Annuler
-                  </button>
-                  <button onClick={onSave} disabled={saving}>
-                    {saving ? 'Saving…' : 'Enregistrer'}
                   </button>
                 </div>
               </div>

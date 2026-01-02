@@ -1,16 +1,16 @@
 import { useAuth } from '../auth/AuthContext.jsx'
-import OperateurNavbar from '../components/OperateurNavbar.jsx'
+import RecruteNavbar from '../components/RecruteNavbar.jsx'
 
-export default function OperateurPage() {
+export default function RecrutePage() {
   const { user, role } = useAuth()
 
   return (
     <div className="app-page">
-      <OperateurNavbar />
+      <RecruteNavbar />
 
       <div className="app-container">
         <div className="app-card">
-          <h2 style={{ marginTop: 0 }}>Dashboard Opérateur</h2>
+          <h2 style={{ marginTop: 0 }}>Dashboard Recrute</h2>
           <div className="app-kv">
             <div className="app-k">Utilisateur</div>
             <div className="app-v">{user?.username || '-'}</div>

@@ -15,13 +15,16 @@ export default function ValidateurPage() {
         <div className="app-navActions">
           <Link
             to="/profile"
-            className="app-circleBtn"
             title="Profile"
             aria-label="Profile"
+            className="app-navProfileLink"
           >
-            {(user?.username || 'P')[0].toUpperCase()}
+            <div className="app-navAvatar">{(user?.username || 'P')[0].toUpperCase()}</div>
           </Link>
-          <button onClick={() => navigate('/logout')}>Logout</button>
+          <button type="button" className="app-navActionBtn" onClick={() => navigate('/logout')}>
+            <span aria-hidden="true">🚪</span>
+            <span>Logout</span>
+          </button>
         </div>
       </div>
 

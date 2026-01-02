@@ -42,7 +42,7 @@ module.exports = {
     const adminPassword = await bcrypt.hash('admin123', saltRounds);
 
     // 1) Seed roles catalog (table: Roles)
-    const roleLibelles = ['administrateur', 'operateur', 'validateur'];
+    const roleLibelles = ['administrateur', 'operateur', 'validateur', 'recrute'];
     for (const libelle of roleLibelles) {
       const exists = await rowExists(queryInterface, Sequelize, {
         table: 'Roles',
@@ -94,6 +94,6 @@ module.exports = {
     }
     await queryInterface.bulkDelete('Users', { username: 'admin' }, {});
 
-    await queryInterface.bulkDelete('Roles', { libelle: ['administrateur', 'operateur', 'validateur'] }, {});
+    await queryInterface.bulkDelete('Roles', { libelle: ['administrateur', 'operateur', 'validateur', 'recrute'] }, {});
   }
 };

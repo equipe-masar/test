@@ -28,7 +28,11 @@ export default function LoginPage() {
       const result = await login(username, password)
       navigate(from || roleHomePath(result.role), { replace: true })
     } catch (err) {
-      setError(err?.message || 'Login failed')
+      if (err?.status === 403) {
+        setError("Votre compte est inactif, veuillez contacter l'administrateur.")
+      } else {
+        setError(err?.message || 'Login failed')
+      }
     } finally {
       setSubmitting(false)
     }

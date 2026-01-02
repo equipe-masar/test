@@ -92,6 +92,8 @@ export function roleHomePath(role) {
       return '/operateur'
     case 'validateur':
       return '/validateur'
+    case 'recrute':
+      return '/recrute'
     default:
       return '/login'
   }

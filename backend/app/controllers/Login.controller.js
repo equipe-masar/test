@@ -15,6 +15,11 @@ const loginUser = async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
 
+    const userState = (user.state || "").toLowerCase();
+    if (userState === "inactive") {
+      return res.status(403).json({ message: "Compte inactif, veuillez contacter l'administrateur" });
+    }
+
     const token = jwt.sign({ username: user.username }, process.env.JWT_SECRET, { expiresIn: "1h" });
 
     res.cookie("token", token, {
@@ -50,6 +55,11 @@ const getMe = async (req, res) => {
       include: [{ model: Role, as: "roles", through: { attributes: [] } }],
     });
     if (!user) return res.status(401).json({ message: "Unauthorized" });
+
+    const userState = (user.state || "").toLowerCase();
+    if (userState === "inactive") {
+      return res.status(403).json({ message: "Compte inactif, veuillez contacter l'administrateur" });
+    }
 
     const roles = (user.roles || []).map(r => r.libelle).filter(Boolean);
     const primaryRole = roles[0] || null;

@@ -19,6 +19,7 @@ export default function GestionUtilisateurs() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [editing, setEditing] = useState(false)
   const [editError, setEditError] = useState(null)
+  const [hoveredButton, setHoveredButton] = useState(null)
   const [editingOriginalUsername, setEditingOriginalUsername] = useState(null)
   const [roles, setRoles] = useState([])
   const [corges, setCorges] = useState([])
@@ -264,7 +265,7 @@ export default function GestionUtilisateurs() {
             >
               <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
                 <img src={ajoutIcon} alt="Ajouter" style={{ width: '18px', height: '18px' }} />
-                <span>Ajouter un utilisateur</span>
+                <span>Ajouter</span>
               </span>
             </button>
           </div>
@@ -348,7 +349,7 @@ export default function GestionUtilisateurs() {
             <div className="modal-header">
               <div className="modal-title">Nouvel utilisateur</div>
               <button type="button" onClick={() => setIsModalOpen(false)}>
-                X
+                &times;
               </button>
             </div>
             <form onSubmit={onSubmit}>
@@ -438,20 +439,34 @@ export default function GestionUtilisateurs() {
                   <div>{createError}</div>
                 </div>
               )}
-              <div className="modal-footer">
+              <div className="modal-footer" style={{ flexDirection: 'column', gap: '10px' }}>
+                <button
+                  type="submit"
+                  className="auth-primaryBtn"
+                  disabled={creating}
+                  onMouseEnter={() => setHoveredButton('create-submit')}
+                  onMouseLeave={() => setHoveredButton(null)}
+                  style={{
+                    backgroundColor: hoveredButton === 'create-submit' ? '#005fa3' : '#0066cc',
+                    transition: 'background-color 0.3s ease',
+                  }}
+                >
+                  {creating ? 'Ajout en cours…' : 'Créer'}
+                </button>
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
                   disabled={creating}
+                  onMouseEnter={() => setHoveredButton('create-cancel')}
+                  onMouseLeave={() => setHoveredButton(null)}
+                  style={{
+                    backgroundColor: hoveredButton === 'create-cancel' ? '#e0e0e0' : '#f0f0f0',
+                    transition: 'background-color 0.3s ease',
+                    border: '1px solid #ccc',
+                    cursor: 'pointer',
+                  }}
                 >
                   Annuler
-                </button>
-                <button
-                  type="submit"
-                  disabled={creating}
-                  className="auth-primaryBtn"
-                >
-                  {creating ? 'Ajout en cours…' : 'Créer'}
                 </button>
               </div>
             </form>
@@ -465,7 +480,7 @@ export default function GestionUtilisateurs() {
             <div className="modal-header">
               <div className="modal-title">Modifier l’utilisateur</div>
               <button type="button" onClick={() => setIsEditModalOpen(false)}>
-                X
+                &times;
               </button>
             </div>
             <form onSubmit={onSubmitEdit}>
@@ -533,20 +548,34 @@ export default function GestionUtilisateurs() {
                   <div>{editError}</div>
                 </div>
               )}
-              <div className="modal-footer">
+              <div className="modal-footer" style={{ flexDirection: 'column', gap: '10px' }}>
+                <button
+                  type="submit"
+                  className="auth-primaryBtn"
+                  disabled={editing}
+                  onMouseEnter={() => setHoveredButton('edit-submit')}
+                  onMouseLeave={() => setHoveredButton(null)}
+                  style={{
+                    backgroundColor: hoveredButton === 'edit-submit' ? '#005fa3' : '#0066cc',
+                    transition: 'background-color 0.3s ease',
+                  }}
+                >
+                  {editing ? 'Sauvegarde…' : 'Enregistrer'}
+                </button>
                 <button
                   type="button"
                   onClick={() => setIsEditModalOpen(false)}
                   disabled={editing}
+                  onMouseEnter={() => setHoveredButton('edit-cancel')}
+                  onMouseLeave={() => setHoveredButton(null)}
+                  style={{
+                    backgroundColor: hoveredButton === 'edit-cancel' ? '#e0e0e0' : '#f0f0f0',
+                    transition: 'background-color 0.3s ease',
+                    border: '1px solid #ccc',
+                    cursor: 'pointer',
+                  }}
                 >
                   Annuler
-                </button>
-                <button
-                  type="submit"
-                  disabled={editing}
-                  className="auth-primaryBtn"
-                >
-                  {editing ? 'Sauvegarde…' : 'Enregistrer'}
                 </button>
               </div>
             </form>

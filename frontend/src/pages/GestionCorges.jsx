@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import { useAuth } from '../auth/AuthContext.jsx';
 import AdminNavbar from '../components/AdminNavbar.jsx';
+import modifIcon from '../assets/modif.png';
+import suppIcon from '../assets/supp.png';
+import ajoutIcon from '../assets/ajout.png';
 
 const initialForm = {
   libelle: "",
@@ -166,7 +169,10 @@ export default function GestionCorge() {
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
             <h2>Gestion des Corges</h2>
             <button className="auth-primaryBtn" style={{ width: 'auto' }} onClick={openAddModal}>
-              + Ajouter un corge
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                <img src={ajoutIcon} alt="Ajouter" style={{ width: '18px', height: '18px' }} />
+                <span>Ajouter</span>
+              </span>
             </button>
           </div>
 
@@ -188,8 +194,24 @@ export default function GestionCorge() {
                   <td>{getLabel(armees, c.id_arme)}</td>
                   <td>{getLabel(garnizons, c.id_garnizon)}</td>
                   <td>
-                    <button onClick={() => openEditModal(c)} style={{ marginRight: '8px' }}>Éditer</button>
-                    <button onClick={() => handleDelete(c.id)} style={{ color: 'red' }}>Supprimer</button>
+                    <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                      <button
+                        type="button"
+                        onClick={() => openEditModal(c)}
+                        title="Modifier"
+                        style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 0 }}
+                      >
+                        <img src={modifIcon} alt="Modifier" width={20} height={20} />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleDelete(c.id)}
+                        title="Supprimer"
+                        style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 0 }}
+                      >
+                        <img src={suppIcon} alt="Supprimer" width={20} height={20} />
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}

@@ -87,6 +87,108 @@ body {
   color: var(--app-muted);
 }
 
+.app-navLinks {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: 12px;
+}
+
+.app-navLink,
+.app-navLinkBtn {
+  color: var(--app-text);
+  font-weight: 600;
+  font-size: 14px;
+  padding: 6px 8px;
+  border-radius: 10px;
+}
+
+.app-navLink:hover,
+.app-navLinkBtn:hover {
+  background: color-mix(in srgb, var(--app-surface) 75%, var(--app-bg));
+}
+
+.app-navLinkBtn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.app-navDropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 20;
+  min-width: 220px;
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid var(--app-border);
+  background: color-mix(in srgb, var(--app-surface) 92%, var(--app-bg));
+  display: grid;
+  gap: 8px;
+}
+
+.app-navDropdownLink {
+  color: var(--app-text);
+  padding: 8px 10px;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+.app-navDropdownLink:hover {
+  background: color-mix(in srgb, var(--app-surface) 75%, var(--app-bg));
+}
+
+.app-navActions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.app-navActionBtn {
+  background: transparent;
+  border: none;
+  color: var(--app-text);
+  font-weight: 600;
+  font-size: 13px;
+  padding: 6px 8px;
+  border-radius: 10px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.app-navActionBtn:hover {
+  background: color-mix(in srgb, var(--app-surface) 75%, var(--app-bg));
+}
+
+.app-navProfileLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--app-text);
+  padding: 6px 8px;
+  border-radius: 12px;
+}
+
+.app-navProfileLink:hover {
+  background: color-mix(in srgb, var(--app-surface) 75%, var(--app-bg));
+}
+
+.app-navAvatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  background: var(--app-accent);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 14px;
+}
+
 .app-container {
   width: 100%;
   max-width: 980px;

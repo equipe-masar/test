@@ -7,8 +7,13 @@ import LogoutPage from './pages/Logout.jsx'
 import AdminPage from './pages/Admin.jsx'
 import OperateurPage from './pages/Operateur.jsx'
 import ValidateurPage from './pages/Validateur.jsx'
+import RecrutePage from './pages/Recrute.jsx'
+import GestionPersonnelsPage from './pages/GestionPersonnels.jsx'
 import GestionCorges from './pages/GestionCorges.jsx' // جديد
 import GestionUtilisateurs from './pages/GestionUtilisateurs.jsx'
+import GestionRecrutementPage from './pages/GestionRecrutement.jsx'
+import GestionOrigineRecrutementPage from './pages/GestionOrigineRecrutement.jsx'
+import GestionNiveauScolairePage from './pages/GestionNiveauScolaire.jsx'
 import ProfilePage from './pages/Profile.jsx'
 
 function HomeRedirect() {
@@ -33,6 +38,9 @@ export default function App() {
         <Route path="/administrateur" element={<AdminPage />} />
         <Route path="/administrateur/utilisateurs" element={<GestionUtilisateurs />} />
         <Route path="/administrateur/corges" element={<GestionCorges />} /> {/* Nouveau lien */}
+        <Route path="/administrateur/recrutement" element={<GestionRecrutementPage />} />
+        <Route path="/administrateur/origine-recrutement" element={<GestionOrigineRecrutementPage />} />
+        <Route path="/administrateur/niveau-scolaire" element={<GestionNiveauScolairePage />} />
       </Route>
 
       {/* OPERATEUR */}
@@ -43,6 +51,12 @@ export default function App() {
       {/* VALIDATEUR */}
       <Route element={<RequireAuth requiredRole="validateur" />}>
         <Route path="/validateur" element={<ValidateurPage />} />
+      </Route>
+
+      {/* RECRUTE */}
+      <Route element={<RequireAuth requiredRole="recrute" />}>
+        <Route path="/recrute" element={<RecrutePage />} />
+        <Route path="/recrute/personnels" element={<GestionPersonnelsPage />} />
       </Route>
 
       {/* PROFILE (any authenticated user) */}
